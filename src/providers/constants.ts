@@ -1,7 +1,7 @@
-// Use relative URLs in development (proxy will handle them) and full URL in production
-export const API_URL = import.meta.env.MODE === 'production'
-  ? (import.meta.env.VITE_API_URL ?? import.meta.env.VITE_BACKEND_URL ?? "/")
-  : "/";
+// Use relative URLs for all environments
+// In development: Vite proxy handles routing to backend
+// In production (Vercel): Vercel serverless functions handle routing to backend
+export const API_URL = "/";
 
 export const APP_NAME = import.meta.env.VITE_APP_NAME ?? "SAPFIAI";
 export const TOKEN_REFRESH_THRESHOLD = Number(import.meta.env.VITE_TOKEN_REFRESH_THRESHOLD ?? 300000);
