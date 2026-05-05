@@ -1,0 +1,25 @@
+{
+	"name": "SAPFIAI",
+	"short_name": "SAPFIAI",
+	"start_url": "/",
+	"display": "standalone",
+	"background_color": "#ffffff",
+	"theme_color": "#1d4ed8",
+	"icons": [
+		{
+			"src": "/logoUC.png",
+			"sizes": "192x192",
+			"type": "image/png"
+		},
+		{
+			"src": "/logoUC.png",
+			"sizes": "512x512",
+			"type": "image/png"
+		},
+		{
+			"src": "/favicon.svg",
+			"sizes": "any",
+			"type": "image/svg+xml"
+		}
+	]
+}
