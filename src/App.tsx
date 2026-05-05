@@ -91,6 +91,7 @@ const App = () => {
         options={{
           title: {
             text: APP_NAME,
+            icon: <img src="/logoUC.png" alt="Logo UC" className="h-8 w-auto" />,
           },
         }}
         resources={[
