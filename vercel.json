@@ -1,3 +1,10 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "/api/proxy" },
+    { "source": "/login", "destination": "/api/proxy" },
+    { "source": "/register", "destination": "/api/proxy" },
+    { "source": "/refresh", "destination": "/api/proxy" },
+    { "source": "/forgotPassword", "destination": "/api/proxy" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 }
