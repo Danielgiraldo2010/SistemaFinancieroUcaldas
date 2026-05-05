@@ -6,32 +6,32 @@ import {
 } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-
-type User = {
-  id: number;
-  firstName: string;
-  lastName: string;
-  fullName: string;
-  email: string;
-  avatar?: string;
-};
+import type { GetIdentityResponse } from "@/types";
 
 export function UserAvatar() {
-  const { data: user, isLoading: userIsLoading } = useGetIdentity<User>();
+  const { data: user, isLoading: userIsLoading } = useGetIdentity<GetIdentityResponse>();
 
   if (userIsLoading || !user) {
     return <Skeleton className={cn("h-10", "w-10", "rounded-full")} />;
   }
 
-  const { fullName, avatar } = user;
+  const displayName = getDisplayName(user);
+  const { avatar } = user;
 
   return (
     <Avatar className={cn("h-10", "w-10")}>
-      {avatar && <AvatarImage src={avatar} alt={fullName} />}
-      <AvatarFallback>{getInitials(fullName)}</AvatarFallback>
+      {avatar && <AvatarImage src={avatar} alt={displayName} />}
+      <AvatarFallback>{getInitials(displayName)}</AvatarFallback>
     </Avatar>
   );
 }
+
+const getDisplayName = (user: GetIdentityResponse) => {
+  if (user.fullName) return user.fullName;
+  const parts = [user.firstName, user.lastName].filter(Boolean);
+  if (parts.length > 0) return parts.join(" ");
+  return user.email ?? "Usuario";
+};
 
 const getInitials = (name = "") => {
   const names = name.split(" ");

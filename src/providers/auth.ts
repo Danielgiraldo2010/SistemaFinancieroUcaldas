@@ -110,7 +110,11 @@ export const authProvider: AuthProvider = {
         .json<GetIdentityResponse>();
 
       return {
-        id: response.email,
+        id: response.id ?? response.email ?? token,
+        firstName: response.firstName,
+        lastName: response.lastName,
+        fullName: response.fullName,
+        avatar: response.avatar,
         email: response.email,
         isEmailConfirmed: response.isEmailConfirmed,
       };

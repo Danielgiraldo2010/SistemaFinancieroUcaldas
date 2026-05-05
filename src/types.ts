@@ -304,6 +304,11 @@ export type LoginResponse = {
 };
 
 export type GetIdentityResponse = {
+  id?: string;
+  firstName?: string;
+  lastName?: string;
+  fullName?: string;
+  avatar?: string;
   email?: string;
   isEmailConfirmed?: boolean;
 };
