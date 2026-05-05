@@ -142,6 +142,32 @@ const UserDropdown = ({ compact = false }: UserDropdownProps) => {
   const displayName = getDisplayName(user)
   const email = user?.email ?? ""
 
+  // Estado de carga
+  const loadingContent = (
+    <Button
+      variant="ghost"
+      className={cn(
+        "h-auto",
+        "px-2",
+        "py-1.5",
+        "gap-2",
+        "justify-start",
+        "text-left",
+        "hover:bg-accent",
+        "rounded-full",
+      )}
+    >
+      <UserAvatar />
+      <div className={cn("flex", "min-w-0", "flex-col", "items-start")}>
+        <span className={cn("h-4", "w-24", "rounded", "bg-muted")} />
+      </div>
+    </Button>
+  )
+
+  if (isLoading) {
+    return loadingContent
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -159,37 +185,30 @@ const UserDropdown = ({ compact = false }: UserDropdownProps) => {
           )}
         >
           <UserAvatar />
-          <div className={cn("flex", "min-w-0", "flex-col", "items-start")}>{
-            isLoading
-              ? (
-                <span className={cn("h-4", "w-24", "rounded", "bg-muted")} />
-              )
-              : (
-                <>
-                  <span
-                    className={cn(
-                      "max-w-[10rem]",
-                      "truncate",
-                      "text-sm",
-                      "font-medium",
-                    )}
-                  >
-                    {compact ? displayName : displayName}
-                  </span>
-                  <span
-                    className={cn(
-                      "max-w-[10rem]",
-                      "truncate",
-                      "text-xs",
-                      "text-muted-foreground",
-                      { hidden: compact },
-                    )}
-                  >
-                    {email}
-                  </span>
-                </>
-              )
-          }</div>
+          <div className={cn("flex", "min-w-0", "flex-col", "items-start")}>
+            <span
+              className={cn(
+                "max-w-[10rem]",
+                "truncate",
+                "text-sm",
+                "font-medium",
+              )}
+            >
+              {displayName}
+            </span>
+            {!compact && (
+              <span
+                className={cn(
+                  "max-w-[10rem]",
+                  "truncate",
+                  "text-xs",
+                  "text-muted-foreground",
+                )}
+              >
+                {email}
+              </span>
+            )}
+          </div>
           <ChevronDownIcon className={cn("size-4", "text-muted-foreground")} />
         </Button>
       </DropdownMenuTrigger>
@@ -210,14 +229,12 @@ const UserDropdown = ({ compact = false }: UserDropdownProps) => {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           variant="destructive"
-          onClick={() => {
+          onSelect={() => {
             logout()
           }}
         >
-          <LogOutIcon className={cn("size-4", "text-destructive")} />
-          <span className={cn("text-destructive")}>
-            {isLoggingOut ? "Logging out..." : "Logout"}
-          </span>
+          <LogOutIcon className={cn("size-4")} />
+          <span>{isLoggingOut ? "Cerrando sesión..." : "Cerrar sesión"}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
