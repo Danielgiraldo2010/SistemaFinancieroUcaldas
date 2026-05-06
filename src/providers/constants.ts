@@ -9,8 +9,8 @@ export const REFRESH_TOKEN_KEY = "refresh_token";
 export const LAST_ACTIVITY_KEY = "last_activity_at";
 export const LOGIN_TIME_KEY = "login_time_at";
 
-export const LOGIN_ENDPOINT = "login";
-export const REGISTER_ENDPOINT = "register";
-export const FORGOT_PASSWORD_ENDPOINT = "forgotPassword";
+export const LOGIN_ENDPOINT = "api/login";
+export const REGISTER_ENDPOINT = "api/register";
+export const FORGOT_PASSWORD_ENDPOINT = "api/forgotPassword";
 export const GET_IDENTITY_ENDPOINT = "api/identity/me";
 export const REFRESH_TOKEN_ENDPOINT = "api/refresh";
