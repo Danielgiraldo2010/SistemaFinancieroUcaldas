@@ -23,7 +23,7 @@ export const authProvider: AuthProvider = {
   async login(params: LoginDto) {
     try {
       const response = await kyInstance
-        .post(`/api/${LOGIN_ENDPOINT}`, { json: params })
+        .post(LOGIN_ENDPOINT, { json: params })
         .json<LoginResponse>();
 
       if (response.accessToken) {
@@ -125,7 +125,7 @@ export const authProvider: AuthProvider = {
 
   async register(params: RegisterDto) {
     try {
-      await kyInstance.post(`/api/${REGISTER_ENDPOINT}`, { json: params });
+      await kyInstance.post(REGISTER_ENDPOINT, { json: params });
 
       return {
         success: true,
@@ -144,7 +144,7 @@ export const authProvider: AuthProvider = {
 
   async forgotPassword(params: ForgotPasswordDto) {
     try {
-      await kyInstance.post(`/api/${FORGOT_PASSWORD_ENDPOINT}`, { json: params });
+      await kyInstance.post(FORGOT_PASSWORD_ENDPOINT, { json: params });
 
       return {
         success: true,
