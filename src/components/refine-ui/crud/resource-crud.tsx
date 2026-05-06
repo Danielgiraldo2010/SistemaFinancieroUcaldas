@@ -389,8 +389,18 @@ export function createCrudPages(config: CrudResourceConfig) {
     const formContent = (
       <LoadingOverlay loading={isLoading}>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex max-w-4xl flex-col gap-6">
-            {config.formDescription ? <p className="text-sm text-muted-foreground">{config.formDescription}</p> : null}
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className={cn(
+              "flex w-full max-w-4xl flex-col gap-5 rounded-xl border border-border/80",
+              "bg-card p-4 shadow-[0_8px_24px_rgba(0,40,77,0.06)] md:gap-6 md:p-6",
+            )}
+          >
+            {config.formDescription ? (
+              <p className="rounded-md border border-[#d5bb87]/30 bg-[#efd9af]/18 px-4 py-3 text-sm text-muted-foreground">
+                {config.formDescription}
+              </p>
+            ) : null}
             <div className="grid gap-4 md:grid-cols-2">
           {formFields.map((field) => {
                 if (field.type === "textarea") {
@@ -468,8 +478,10 @@ export function createCrudPages(config: CrudResourceConfig) {
               })}
             </div>
 
-            <div className="flex gap-2">
-              <Button type="submit">Guardar</Button>
+            <div className="flex justify-end gap-2 border-t border-border/70 pt-5">
+              <Button type="submit" className="w-full min-w-[132px] sm:w-auto">
+                Guardar
+              </Button>
             </div>
           </form>
         </Form>
@@ -510,7 +522,7 @@ export function createCrudPages(config: CrudResourceConfig) {
     return (
       <ShowView>
         <ShowViewHeader resource={config.resource} title={recordTitle || config.title} />
-        <div className="grid gap-4 rounded-md border bg-background p-4 md:grid-cols-2">
+        <div className="grid gap-4 rounded-xl border border-border/80 bg-card p-4 shadow-[0_8px_24px_rgba(0,40,77,0.06)] md:grid-cols-2 md:p-6">
           {showFields
             .map((key) => config.fields.find((field) => field.key === key))
             .filter((field): field is CrudField => Boolean(field))
@@ -518,9 +530,16 @@ export function createCrudPages(config: CrudResourceConfig) {
             .map((field) => {
               const value = record[field.key];
               return (
-                <div key={field.key} className="rounded-md border p-3">
-                  <div className="text-xs uppercase text-muted-foreground">{field.label}</div>
-                  <div className="mt-1 text-sm">{normalizeDisplayValue(field, value, record)}</div>
+                <div
+                  key={field.key}
+                  className="rounded-lg border border-border/75 bg-background/70 p-4 shadow-xs transition-colors hover:border-[#d5bb87]/50"
+                >
+                  <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    {field.label}
+                  </div>
+                  <div className="mt-2 text-sm font-medium">
+                    {normalizeDisplayValue(field, value, record)}
+                  </div>
                 </div>
               );
             })}

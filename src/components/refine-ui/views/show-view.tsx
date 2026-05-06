@@ -21,7 +21,7 @@ type ShowViewProps = PropsWithChildren<{
 
 export function ShowView({ children, className }: ShowViewProps) {
   return (
-    <div className={cn("flex flex-col", "gap-4", className)}>{children}</div>
+    <div className={cn("flex min-w-0 flex-col", "gap-5", className)}>{children}</div>
   );
 }
 
@@ -59,7 +59,7 @@ export const ShowViewHeader = ({
   return (
     <div className={cn("flex flex-col", "gap-4", wrapperClassName)}>
       <div className="flex items-center relative gap-2">
-        <div className="bg-background z-[2] pr-4">
+        <div className="bg-background z-[2] pr-4 text-sm">
           <Breadcrumb />
         </div>
         <Separator className={cn("absolute", "left-0", "right-0", "z-[1]")} />
@@ -67,21 +67,30 @@ export const ShowViewHeader = ({
       <div
         className={cn(
           "flex",
-          "gap-1",
-          "items-center",
+          "gap-2",
+          "flex-col",
+          "items-start",
           "justify-between",
-          "-ml-2.5",
+          "sm:flex-row",
+          "sm:items-center",
           headerClassName,
         )}
       >
-        <div className="flex items-center gap-1">
-          <Button variant="ghost" size="icon" onClick={back}>
+        <div className="flex min-w-0 items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={back}
+            className="rounded-full text-[#003e70] hover:bg-[#efd9af]/25"
+          >
             <ArrowLeftIcon className="h-4 w-4" />
           </Button>
-          <h2 className="text-2xl font-bold">{title}</h2>
+          <h2 className="min-w-0 text-[24px] font-bold leading-tight tracking-tight text-[#00284d] dark:text-white sm:text-[28px]">
+            {title}
+          </h2>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex w-full items-center gap-2 sm:w-auto">
           <RefreshButton
             variant="outline"
             recordItemId={recordItemId}

@@ -106,7 +106,7 @@ export function AdminRolesEdit() {
       <EditViewHeader title={`Editar Rol: ${originalName || "—"}`} />
       <Form {...form}>
         <form
-          className="flex max-w-xl flex-col gap-6"
+          className="flex w-full max-w-xl flex-col gap-5 rounded-xl border border-border/80 bg-card p-4 shadow-[0_8px_24px_rgba(0,40,77,0.06)] md:gap-6 md:p-6"
           onSubmit={form.handleSubmit(async (values) => {
             const nextName = values.name.trim();
             if (!nextName) return;
@@ -146,12 +146,14 @@ export function AdminRolesEdit() {
             )}
           />
 
-          {error ? <div className="text-sm text-red-600">{error}</div> : null}
-          {success ? <div className="text-sm text-emerald-600">{success}</div> : null}
+          {error ? <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">{error}</div> : null}
+          {success ? <div className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">{success}</div> : null}
 
-          <Button type="submit" disabled={saving}>
-            {saving ? "Guardando..." : "Guardar"}
-          </Button>
+          <div className="flex justify-end border-t border-border/70 pt-5">
+            <Button type="submit" disabled={saving} className="w-full min-w-[132px] sm:w-auto">
+              {saving ? "Guardando..." : "Guardar"}
+            </Button>
+          </div>
         </form>
       </Form>
     </EditView>
@@ -176,7 +178,7 @@ export function AdminRolesCreate() {
       <CreateViewHeader title="Crear Rol" />
       <Form {...form}>
         <form
-          className="flex max-w-xl flex-col gap-6"
+          className="flex w-full max-w-xl flex-col gap-5 rounded-xl border border-border/80 bg-card p-4 shadow-[0_8px_24px_rgba(0,40,77,0.06)] md:gap-6 md:p-6"
           onSubmit={form.handleSubmit((values) => onFinish({ name: values.name }))}
         >
           <FormField
@@ -192,7 +194,9 @@ export function AdminRolesCreate() {
               </FormItem>
             )}
           />
-          <Button type="submit">Guardar</Button>
+          <div className="flex justify-end border-t border-border/70 pt-5">
+            <Button type="submit" className="w-full min-w-[132px] sm:w-auto">Guardar</Button>
+          </div>
         </form>
       </Form>
     </CreateView>

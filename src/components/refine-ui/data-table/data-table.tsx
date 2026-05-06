@@ -39,6 +39,10 @@ export function DataTable<TData extends BaseRecord>({
 
   const columns = getAllColumns();
   const leafColumns = table.reactTable.getAllLeafColumns();
+  const tableMinWidth = Math.max(
+    leafColumns.reduce((total, column) => total + column.getSize(), 0),
+    720,
+  );
   const isLoading = tableQuery.isLoading;
 
   const tableContainerRef = useRef<HTMLDivElement>(null);
@@ -79,9 +83,25 @@ export function DataTable<TData extends BaseRecord>({
   }, [tableQuery.data?.data, pageSize]);
 
   return (
-    <div className={cn("flex", "flex-col", "flex-1", "gap-4")}>
-      <div ref={tableContainerRef} className={cn("rounded-md", "border")}>
-        <Table ref={tableRef} style={{ tableLayout: "fixed", width: "100%" }}>
+    <div className={cn("flex", "flex-col", "flex-1", "gap-5")}>
+      <div
+        ref={tableContainerRef}
+        className={cn(
+          "overflow-x-auto overflow-y-hidden rounded-lg border border-border/80 bg-card",
+          "shadow-[0_8px_24px_rgba(0,40,77,0.06)]",
+          "scroll-smooth",
+          "[scrollbar-color:#d5bb87_transparent]",
+          "[scrollbar-width:thin]",
+        )}
+      >
+        <Table
+          ref={tableRef}
+          style={{
+            tableLayout: "fixed",
+            width: "100%",
+            minWidth: tableMinWidth,
+          }}
+        >
           <TableHeader>
             {getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>

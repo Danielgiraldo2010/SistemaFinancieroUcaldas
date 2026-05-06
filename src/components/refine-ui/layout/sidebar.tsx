@@ -27,30 +27,71 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, ListIcon } from "lucide-react";
+import { ChevronDown, ChevronRight, ListIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function Sidebar() {
   const { open } = useShadcnSidebar();
   const { menuItems, selectedKey } = useMenu();
+  const contentRef = React.useRef<HTMLDivElement>(null);
+  const [isMenuScrolled, setIsMenuScrolled] = React.useState(false);
+  const [canMenuScroll, setCanMenuScroll] = React.useState(false);
+
+  React.useEffect(() => {
+    const content = contentRef.current;
+    if (!content) return;
+
+    const updateMenuScrollState = () => {
+      setIsMenuScrolled(content.scrollTop > 10);
+      setCanMenuScroll(content.scrollHeight > content.clientHeight + 10);
+    };
+
+    updateMenuScrollState();
+
+    content.addEventListener("scroll", updateMenuScrollState, {
+      passive: true,
+    });
+    window.addEventListener("resize", updateMenuScrollState);
+
+    return () => {
+      content.removeEventListener("scroll", updateMenuScrollState);
+      window.removeEventListener("resize", updateMenuScrollState);
+    };
+  }, [menuItems, open]);
+
+  const handleMenuScrollToggle = () => {
+    const content = contentRef.current;
+    if (!content) return;
+
+    content.scrollTo({
+      top: isMenuScrolled ? 0 : content.scrollHeight,
+      behavior: "smooth",
+    });
+  };
 
   return (
     <ShadcnSidebar collapsible="icon" className={cn("border-none")}>
       <ShadcnSidebarRail />
       <SidebarHeader />
       <ShadcnSidebarContent
+        ref={contentRef}
         className={cn(
+          "relative",
           "transition-discrete",
           "duration-200",
           "flex",
           "flex-col",
-          "gap-2",
+          "gap-1",
           "pt-2",
           "pb-2",
           "border-r",
-          "border-border",
+          "border-[#efd9af]/20",
+          "bg-[#003e70]",
+          "scroll-smooth",
+          "[scrollbar-width:none]",
+          "[&::-webkit-scrollbar]:hidden",
           {
-            "px-3": open,
+            "px-3 pb-16": open,
             "px-1": !open,
           },
         )}
@@ -63,6 +104,29 @@ export function Sidebar() {
           />
         ))}
       </ShadcnSidebarContent>
+      {open && canMenuScroll && (
+        <Button
+          type="button"
+          size="icon"
+          aria-label={isMenuScrolled ? "Subir en el menú" : "Bajar en el menú"}
+          onClick={handleMenuScrollToggle}
+          className={cn(
+            "absolute bottom-3 left-1/2 z-30 h-9 w-9 -translate-x-1/2",
+            "rounded-full border border-[#d5bb87]/35 bg-[#00284d] text-white",
+            "shadow-[0_8px_18px_rgba(0,40,77,0.28)]",
+            "transition-all duration-300 ease-out",
+            "hover:-translate-y-0.5 hover:bg-[#045389] hover:text-white",
+            "focus-visible:ring-[#d5bb87]/70",
+          )}
+        >
+          <ChevronDown
+            className={cn(
+              "h-4 w-4 transition-transform duration-300 ease-out",
+              isMenuScrolled && "rotate-180",
+            )}
+          />
+        </Button>
+      )}
     </ShadcnSidebar>
   );
 }
@@ -94,7 +158,7 @@ function SidebarItemGroup({ item, selectedKey }: MenuItemProps) {
   const { open } = useShadcnSidebar();
 
   return (
-    <div className={cn("border-t", "border-sidebar-border", "pt-4")}>
+    <div className={cn("border-t", "border-[#efd9af]/18", "pt-3")}>
       <span
         className={cn(
           "ml-3",
@@ -102,11 +166,12 @@ function SidebarItemGroup({ item, selectedKey }: MenuItemProps) {
           "text-xs",
           "font-semibold",
           "uppercase",
-          "text-muted-foreground",
+          "text-[#efd9af]",
+          "tracking-wide",
           "transition-all",
           "duration-200",
           {
-            "h-8": open,
+            "h-7": open,
             "h-0": !open,
             "opacity-0": !open,
             "opacity-100": open,
@@ -141,7 +206,7 @@ function SidebarItemCollapsible({ item, selectedKey }: MenuItemProps) {
         "h-4",
         "w-4",
         "shrink-0",
-        "text-muted-foreground",
+        "text-[#efd9af]/85",
         "transition-transform",
         "duration-200",
         "group-data-[state=open]:rotate-90",
@@ -176,7 +241,7 @@ function SidebarItemDropdown({ item, selectedKey }: MenuItemProps) {
       <DropdownMenuTrigger asChild>
         <SidebarButton item={item} />
       </DropdownMenuTrigger>
-      <DropdownMenuContent side="right" align="start">
+      <DropdownMenuContent side="right" align="start" className="border-[#d5bb87]/30">
         {children?.map((child: TreeMenuItem) => {
           const { key: childKey } = child;
           const isSelected = childKey === selectedKey;
@@ -186,7 +251,7 @@ function SidebarItemDropdown({ item, selectedKey }: MenuItemProps) {
               <Link
                 to={child.route || ""}
                 className={cn("flex w-full items-center gap-2", {
-                  "bg-accent text-accent-foreground": isSelected,
+                  "bg-[#d5bb87] text-[#00284d]": isSelected,
                 })}
               >
                 <ItemIcon
@@ -220,7 +285,8 @@ function SidebarHeader() {
         "p-0",
         "h-16",
         "border-b",
-        "border-border",
+        "border-[#efd9af]/20",
+        "bg-[#003e70]",
         "flex-row",
         "items-center",
         "justify-between",
@@ -248,11 +314,12 @@ function SidebarHeader() {
           },
         )}
       >
-        <div>{title.icon}</div>
+        <div className="[&_img]:brightness-0 [&_img]:invert">{title.icon}</div>
         <h2
           className={cn(
             "text-sm",
             "font-bold",
+            "text-white",
             "transition-opacity",
             "duration-200",
             {
@@ -266,7 +333,7 @@ function SidebarHeader() {
       </Link>
 
       <ShadcnSidebarTrigger
-        className={cn("text-muted-foreground", "mr-1.5", {
+        className={cn("text-[#efd9af] hover:bg-[#045389] hover:text-white", "mr-1.5", {
           "opacity-0": !open,
           "opacity-100": open || isMobile,
           "pointer-events-auto": open || isMobile,
@@ -290,8 +357,8 @@ function ItemIcon({ icon, isSelected }: IconProps) {
   return (
     <div
       className={cn("w-4", {
-        "text-muted-foreground": !isSelected,
-        "text-sidebar-primary-foreground": isSelected,
+        "text-[#efd9af]": !isSelected,
+        "text-[#00284d]": isSelected,
       })}
     >
       {icon ?? <ListIcon />}
@@ -329,8 +396,8 @@ function SidebarButton({
           truncate: !rightIcon,
           "font-normal": !isSelected,
           "font-semibold": isSelected,
-          "text-sidebar-primary-foreground": isSelected,
-          "text-foreground": !isSelected,
+          "text-[#00284d]": isSelected,
+          "text-white": !isSelected,
         })}
       >
         {getDisplayName(item)}
@@ -345,10 +412,12 @@ function SidebarButton({
       variant="ghost"
       size="lg"
       className={cn(
-        "flex w-full items-center justify-start gap-2 py-2 !px-3 text-sm",
+        "flex h-9 w-full items-center justify-start gap-2 rounded-md py-2 !px-3 text-sm",
+        "text-white hover:!bg-[#045389] hover:text-white",
+        "focus-visible:ring-[#d5bb87]/60",
         {
           "bg-sidebar-primary": isSelected,
-          "hover:!bg-sidebar-primary/90": isSelected,
+          "hover:!bg-[#d5bb87]": isSelected,
           "text-sidebar-primary-foreground": isSelected,
           "hover:text-sidebar-primary-foreground": isSelected,
         },

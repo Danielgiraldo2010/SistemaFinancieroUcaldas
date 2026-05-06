@@ -61,6 +61,10 @@ export const RefreshButton = React.forwardRef<
         {...rest}
         ref={ref}
         disabled={isDisabled}
+        className={cn(
+          "h-9 rounded-md px-4 shadow-sm transition-all hover:shadow-md focus-visible:ring-[#d5bb87]/60",
+          rest.className,
+        )}
       >
         {children ?? (
           <div className="flex items-center gap-2">

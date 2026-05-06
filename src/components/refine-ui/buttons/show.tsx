@@ -4,6 +4,7 @@ import React from "react";
 import { type BaseKey, useShowButton } from "@refinedev/core";
 import { Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type ShowButtonProps = {
   /**
@@ -52,7 +53,16 @@ export const ShowButton = React.forwardRef<
 
     return (
       <Button {...rest} ref={ref} disabled={isDisabled} asChild>
-        <LinkComponent to={to} replace={false}>
+        <LinkComponent
+          to={to}
+          replace={false}
+          className={cn(
+            "flex h-full items-center justify-center gap-2 rounded-md",
+            "border border-border/80 bg-background px-4 text-sm font-semibold",
+            "shadow-xs transition-all hover:bg-muted/50 hover:shadow-sm",
+            "focus-visible:ring-[#d5bb87]/60",
+          )}
+        >
           {children ?? (
             <div className="flex items-center gap-2 font-semibold">
               <Eye className="h-4 w-4" />

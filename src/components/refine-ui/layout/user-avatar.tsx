@@ -8,10 +8,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
 type User = {
-  id: number;
-  firstName: string;
-  lastName: string;
-  fullName: string;
+  id?: number | string;
+  firstName?: string;
+  lastName?: string;
+  fullName?: string;
   email: string;
   avatar?: string;
 };
@@ -23,12 +23,19 @@ export function UserAvatar() {
     return <Skeleton className={cn("h-10", "w-10", "rounded-full")} />;
   }
 
-  const { fullName, avatar } = user;
+  const { email, avatar } = user;
+  const fullName =
+    user.fullName ||
+    [user.firstName, user.lastName].filter(Boolean).join(" ") ||
+    email ||
+    "Usuario";
 
   return (
-    <Avatar className={cn("h-10", "w-10")}>
+    <Avatar className={cn("h-10", "w-10", "border", "border-[#efd9af]/40")}>
       {avatar && <AvatarImage src={avatar} alt={fullName} />}
-      <AvatarFallback>{getInitials(fullName)}</AvatarFallback>
+      <AvatarFallback className="bg-[#d5bb87] text-sm font-bold text-[#00284d]">
+        {getInitials(fullName)}
+      </AvatarFallback>
     </Avatar>
   );
 }

@@ -75,8 +75,11 @@ function UnidadesEjectorasForm({ isEdit = false }: { isEdit?: boolean }) {
   const formContent = (
     <LoadingOverlay loading={isLoading}>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6 max-w-2xl">
-          <div className="grid grid-cols-2 gap-4">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex w-full max-w-2xl flex-col gap-5 rounded-xl border border-border/80 bg-card p-4 shadow-[0_8px_24px_rgba(0,40,77,0.06)] md:gap-6 md:p-6"
+        >
+          <div className="grid gap-4 md:grid-cols-2">
             <FormField
               control={form.control}
               name="codigo"
@@ -193,8 +196,8 @@ function UnidadesEjectorasForm({ isEdit = false }: { isEdit?: boolean }) {
             )}
           />
 
-          <div className="flex gap-2">
-            <Button type="submit">Guardar</Button>
+          <div className="flex justify-end gap-2 border-t border-border/70 pt-5">
+            <Button type="submit" className="w-full min-w-[132px] sm:w-auto">Guardar</Button>
           </div>
         </form>
       </Form>
