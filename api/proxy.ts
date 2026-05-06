@@ -4,8 +4,12 @@ const BACKEND_URL = process.env.VITE_BACKEND_URL?.replace(/\/$/, "");
 
 export default async (req: VercelRequest, res: VercelResponse) => {
   try {
-    const path = req.url ?? "/";
-    const target = `${BACKEND_URL}${path}`;
+    const pathFromQuery = req.query.path;
+    const path = Array.isArray(pathFromQuery)
+      ? pathFromQuery[0]
+      : pathFromQuery ?? req.url ?? "/";
+    const normalizedPath = String(path).replace(/^\//, "");
+    const target = `${BACKEND_URL}/${normalizedPath}`;
 
     const headers: Record<string, string> = {};
     Object.entries(req.headers).forEach(([key, value]) => {

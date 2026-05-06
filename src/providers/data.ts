@@ -226,7 +226,7 @@ const provider = createDataProvider(
             const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
             if (refreshToken) {
               try {
-                const refreshResponse = await fetch(`${API_URL}${REFRESH_TOKEN_ENDPOINT}`, {
+                const refreshResponse = await fetch(`/${REFRESH_TOKEN_ENDPOINT}`, {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({ refreshToken }),

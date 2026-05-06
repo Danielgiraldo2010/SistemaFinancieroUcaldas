@@ -513,7 +513,7 @@ const App = () => {
           <Route
             element={
               <Authenticated key="auth-pages" fallback={<Outlet />}>
-                <NavigateToResource fallbackTo="/" />
+                <NavigateToResource fallbackTo="/dashboard" />
               </Authenticated>
             }>
             <Route path="/login" element={<SignInForm />} />
@@ -529,7 +529,8 @@ const App = () => {
                 </Layout>
               </Authenticated>
             }>
-            <Route index element={<NavigateToResource resource="dbo-cdp" fallbackTo="/login" />} />
+            <Route index element={<NavigateToResource resource="dbo-cdp" fallbackTo="/dashboard" />} />
+            <Route path="/dashboard" element={<NavigateToResource resource="dbo-cdp" fallbackTo="/login" />} />
 
             {/* Administración */}
             <Route path="/administracion/usuarios" element={<AdminUsersList />} />

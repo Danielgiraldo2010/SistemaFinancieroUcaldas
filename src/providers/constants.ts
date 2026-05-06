@@ -13,4 +13,4 @@ export const LOGIN_ENDPOINT = "login";
 export const REGISTER_ENDPOINT = "register";
 export const FORGOT_PASSWORD_ENDPOINT = "forgotPassword";
 export const GET_IDENTITY_ENDPOINT = "api/identity/me";
-export const REFRESH_TOKEN_ENDPOINT = "refresh";
+export const REFRESH_TOKEN_ENDPOINT = "api/refresh";
