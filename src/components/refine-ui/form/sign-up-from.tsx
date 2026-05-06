@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { UserPlus } from "lucide-react";
+import { ArrowLeft, UserPlus } from "lucide-react";
 
 import { useRegister, useLink, useNotification } from "@refinedev/core";
 import { Button } from "@/components/ui/button";
@@ -220,6 +220,19 @@ export const SignUpForm = () => {
                 )}
               >
                 Inicia sesión
+              </Link>
+            </div>
+
+            <div className="mt-4 flex justify-center border-t border-[#d9dee7]/80 pt-4">
+              <Link
+                to="/login"
+                className={cn(
+                  "inline-flex items-center gap-2 text-sm font-medium",
+                  "text-[#004b82] transition-colors hover:underline",
+                )}
+              >
+                <ArrowLeft className="h-4 w-4" />
+                <span>Volver al inicio</span>
               </Link>
             </div>
           </form>

@@ -130,22 +130,18 @@ export const ForgotPasswordForm = () => {
               Enviar instrucciones
             </Button>
 
-            <Link
-              to="/login"
-              className={cn(
-                "mx-auto mt-5 inline-flex",
-                "items-center",
-                "gap-2",
-                "text-sm",
-                "font-medium",
-                "text-[#004b82]",
-                "hover:underline",
-                "transition-colors",
-              )}
-            >
-              <ArrowLeft className={cn("w-4", "h-4")} />
-              <span>Volver al inicio de sesión</span>
-            </Link>
+            <div className="mt-5 flex justify-center border-t border-[#d9dee7]/80 pt-4">
+              <Link
+                to="/login"
+                className={cn(
+                  "inline-flex items-center gap-2 text-sm font-medium",
+                  "text-[#004b82] transition-colors hover:underline",
+                )}
+              >
+                <ArrowLeft className={cn("w-4", "h-4")} />
+                <span>Volver al inicio de sesión</span>
+              </Link>
+            </div>
           </form>
         </section>
 
