@@ -122,3 +122,19 @@
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes login-bg-zoom-in {
+  from {
+    transform: scale(1);
+  }
+
+  to {
+    transform: scale(1.08);
+  }
+}
+
+.login-bg-zoom {
+  animation: login-bg-zoom-in 9s ease-out forwards;
+  transform-origin: center center;
+  will-change: transform;
+}

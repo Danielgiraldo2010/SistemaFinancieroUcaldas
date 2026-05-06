@@ -14,6 +14,7 @@ import { Layout } from "@/components/refine-ui/layout/layout";
 
 import { SignInForm } from "@/components/refine-ui/form/sign-in-from";
 import { SignUpForm } from "@/components/refine-ui/form/sign-up-from";
+import { ForgotPasswordForm } from "@/components/refine-ui/form/forgot-password-from";
 
 import { dataProvider } from "@/providers/data";
 import { authProvider } from "@/providers/auth";
@@ -517,6 +518,7 @@ const App = () => {
             }>
             <Route path="/login" element={<SignInForm />} />
             <Route path="/register" element={<SignUpForm />} />
+            <Route path="/forgot-password" element={<ForgotPasswordForm />} />
           </Route>
 
           {/* Protected routes - require authentication */}

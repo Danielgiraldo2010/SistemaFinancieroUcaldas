@@ -2,22 +2,11 @@
 
 import { useState } from "react";
 
-import { CircleHelp } from "lucide-react";
-
-import { useLogin, useRefineOptions, useLink } from "@refinedev/core";
+import { useLogin, useLink } from "@refinedev/core";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardFooter,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { InputPassword } from "@/components/refine-ui/form/input-password";
 import { cn } from "@/lib/utils";
 
@@ -27,8 +16,6 @@ export const SignInForm = () => {
   const [password, setPassword] = useState("");
 
   const Link = useLink();
-
-  const { title } = useRefineOptions();
 
   const { mutate: login } = useLogin();
 
@@ -54,75 +41,117 @@ export const SignInForm = () => {
   // };
 
   return (
-    <div
-      className={cn(
-        "flex",
-        "flex-col",
-        "items-center",
-        "justify-center",
-        "px-6",
-        "py-8",
-        "min-h-svh",
-      )}
-    >
-      <div className={cn("flex", "items-center", "justify-center")}>
-        {title.icon && (
-          <div
-            className={cn("text-foreground", "[&>svg]:w-12", "[&>svg]:h-12")}
-          >
-            {title.icon}
-          </div>
+    <div className={cn("relative min-h-svh overflow-hidden")}>
+      <div className="login-bg-zoom absolute inset-0 bg-[url('/image/bg-universidad.png')] bg-cover bg-center" />
+      <div className="absolute inset-0 bg-[#064f85]/48 sm:bg-[#064f85]/44 lg:bg-[#064f85]/42" />
+
+      <main
+        className={cn(
+          "relative z-10 flex min-h-svh w-full flex-col items-center",
+          "justify-center gap-5 px-5 py-7",
+          "sm:px-6",
+          "md:gap-8 md:px-10 md:py-10",
+          "lg:flex-row lg:justify-between lg:gap-16 lg:px-[12vw]",
         )}
-      </div>
+      >
+        <div className="flex h-[88px] w-full items-end justify-center min-[390px]:h-[108px] md:hidden">
+          <img
+            src="/image/logo1ucaldas.png"
+            alt="Universidad de Caldas"
+            className="h-auto w-[112px] object-contain brightness-0 invert drop-shadow-[0_5px_16px_rgba(0,0,0,0.42)] min-[390px]:w-[128px]"
+          />
+        </div>
 
-      <Card className={cn("sm:w-[456px]", "p-12", "mt-6")}>
-        <CardHeader className={cn("px-0")}>
-          <CardTitle
-            className={cn(
-              "text-blue-600",
-              "dark:text-blue-400",
-              "text-3xl",
-              "font-semibold",
-            )}
-          >
-            Sign in
-          </CardTitle>
-          <CardDescription
-            className={cn("text-muted-foreground", "font-medium")}
-          >
-            Welcome back
-          </CardDescription>
-        </CardHeader>
+        <section
+          className={cn(
+            "hidden w-full items-center justify-center gap-10 md:flex",
+            "md:max-w-[560px]",
+            "lg:max-w-[520px] lg:flex-1 lg:gap-12",
+          )}
+          aria-label="Logos institucionales"
+        >
+          <img
+            src="/image/logo1ucaldas.png"
+            alt="Universidad de Caldas"
+            className="h-auto w-[235px] max-w-[58%] object-contain brightness-0 invert drop-shadow-[0_4px_14px_rgba(0,0,0,0.36)] lg:w-[320px]"
+          />
+          <img
+            src="/image/logo-cidt.png"
+            alt="CIDT"
+            className="h-auto w-[108px] max-w-[28%] object-contain brightness-0 invert drop-shadow-[0_4px_14px_rgba(0,0,0,0.36)] lg:w-[160px]"
+          />
+        </section>
 
-        <Separator />
+        <section
+          className={cn(
+            "w-full max-w-[360px] rounded-[14px]",
+            "bg-white/91 px-6 py-8 shadow-[0_18px_60px_rgba(1,34,63,0.24)]",
+            "backdrop-blur-[2px]",
+            "sm:max-w-[385px] sm:px-10 sm:py-11",
+            "md:max-w-[420px]",
+            "lg:max-w-[385px]",
+          )}
+        >
+          <div className="mb-7">
+            <h1 className="text-[26px] font-bold leading-tight text-[#004b82]">
+              Acceso Seguro
+            </h1>
+            <p className="mt-1 text-sm text-[#626b77]">
+              Sistema Financiero Sapfiai
+            </p>
+          </div>
 
-        <CardContent className={cn("px-0")}>
           <form onSubmit={handleSignIn}>
             <div className={cn("flex", "flex-col", "gap-2")}>
-              <Label htmlFor="email">Email</Label>
+              <Label
+                htmlFor="email"
+                className="text-sm font-semibold text-[#303846]"
+              >
+                Correo Institucional
+              </Label>
               <Input
                 id="email"
                 type="email"
-                placeholder=""
+                placeholder="usuario@ucaldas.edu.co"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                className={cn(
+                  "h-[50px] rounded-[10px] border-[#d9dee7] bg-white/88",
+                  "px-4 text-base text-[#2f3947] shadow-none",
+                  "placeholder:text-[#8b96a8]",
+                  "focus-visible:border-[#0a4f82] focus-visible:ring-[#0a4f82]/20",
+                )}
               />
             </div>
             <div
-              className={cn("relative", "flex", "flex-col", "gap-2", "mt-6")}
+              className={cn("relative", "flex", "flex-col", "gap-2", "mt-5")}
             >
-              <Label htmlFor="password">Password</Label>
+              <Label
+                htmlFor="password"
+                className="text-sm font-semibold text-[#303846]"
+              >
+                Contraseña
+              </Label>
               <InputPassword
+                id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                placeholder="••••••••"
+                className={cn(
+                  "h-[50px] rounded-[10px] border-[#d9dee7] bg-white/88",
+                  "px-4 text-base text-[#2f3947] shadow-none",
+                  "placeholder:text-[#8b96a8]",
+                  "focus-visible:border-[#0a4f82] focus-visible:ring-[#0a4f82]/20",
+                )}
               />
             </div>
 
             <div
               className={cn(
-                "flex items-center justify-between",
+                "flex justify-between",
+                "items-start sm:items-center",
                 "flex-wrap",
                 "gap-2",
                 "mt-4",
@@ -135,8 +164,14 @@ export const SignInForm = () => {
                   onCheckedChange={(checked) =>
                     setRememberMe(checked === "indeterminate" ? false : checked)
                   }
+                  className="border-[#0a4f82] data-[state=checked]:border-[#0a4f82] data-[state=checked]:bg-[#0a4f82]"
                 />
-                <Label htmlFor="remember">Remember me</Label>
+                <Label
+                  htmlFor="remember"
+                  className="text-sm font-medium text-[#526070]"
+                >
+                  Recordarme
+                </Label>
               </div>
               <Link
                 to="/forgot-password"
@@ -144,19 +179,24 @@ export const SignInForm = () => {
                   "text-sm",
                   "flex",
                   "items-center",
-                  "gap-2",
-                  "text-primary hover:underline",
-                  "text-blue-600",
-                  "dark:text-blue-400",
+                  "ml-auto",
+                  "text-[#004b82] hover:underline",
                 )}
               >
-                <span>Forgot password</span>
-                <CircleHelp className={cn("w-4", "h-4")} />
+                <span>¿Olvidó su contraseña?</span>
               </Link>
             </div>
 
-            <Button type="submit" size="lg" className={cn("w-full", "mt-6")}>
-              Sign in
+            <Button
+              type="submit"
+              size="lg"
+              className={cn(
+                "mt-7 h-[49px] w-full rounded-[10px]",
+                "bg-[#004b82] text-base font-bold text-white",
+                "hover:bg-[#003f6e] focus-visible:ring-[#004b82]/30",
+              )}
+            >
+              Iniciar Sesión
             </Button>
 
             {/* <div className={cn("flex", "items-center", "gap-4", "mt-6")}>
@@ -215,30 +255,32 @@ export const SignInForm = () => {
                 </Button>
               </div>
             </div> */}
+            <div className={cn("mt-5 w-full text-center text-sm")}>
+              <span className={cn("text-[#626b77]")}>
+                ¿No tienes cuenta?{" "}
+              </span>
+              <Link
+                to="/register"
+                className={cn(
+                  "font-semibold",
+                  "text-[#004b82]",
+                  "underline underline-offset-2",
+                )}
+              >
+                Regístrate
+              </Link>
+            </div>
           </form>
-        </CardContent>
+        </section>
 
-        <Separator />
-
-        <CardFooter>
-          <div className={cn("w-full", "text-center text-sm")}>
-            <span className={cn("text-sm", "text-muted-foreground")}>
-              No account?{" "}
-            </span>
-            <Link
-              to="/register"
-              className={cn(
-                "text-green-600",
-                "dark:text-green-400",
-                "font-semibold",
-                "underline",
-              )}
-            >
-              Sign up
-            </Link>
-          </div>
-        </CardFooter>
-      </Card>
+        <div className="flex h-[52px] w-full items-start justify-center min-[390px]:h-[64px] md:hidden">
+          <img
+            src="/image/logo-cidt.png"
+            alt="CIDT"
+            className="h-auto w-[68px] object-contain brightness-0 invert drop-shadow-[0_4px_12px_rgba(0,0,0,0.42)] min-[390px]:w-[76px]"
+          />
+        </div>
+      </main>
     </div>
   );
 };
