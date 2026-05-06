@@ -4,6 +4,7 @@ import React from "react";
 import { type BaseKey, useDeleteButton } from "@refinedev/core";
 import { Loader2, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type DeleteButtonProps = {
   /**
@@ -54,6 +55,7 @@ export const DeleteButton = React.forwardRef<
   const isHidden = hidden || rest.hidden;
 
   if (isHidden) return null;
+  const isIconSize = String(rest.size ?? "").startsWith("icon");
 
   const handleConfirm = () => {
     if (typeof onConfirm === "function") {
@@ -67,6 +69,13 @@ export const DeleteButton = React.forwardRef<
       {...rest}
       ref={ref}
       disabled={isDisabled}
+      className={cn(
+        "h-8 rounded-md text-sm font-semibold",
+        !isIconSize && "px-4",
+        "shadow-xs transition-all hover:shadow-sm",
+        "focus-visible:ring-[#d5bb87]/60",
+        rest.className,
+      )}
       onClick={(e) => {
         e.stopPropagation();
         const message = `${defaultConfirmTitle}\n\nThis action cannot be undone. This will permanently delete this ${resource ? resource.slice(0, -1) : "item"}.`;

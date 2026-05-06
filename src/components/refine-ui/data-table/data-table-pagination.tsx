@@ -50,12 +50,14 @@ export function DataTablePagination({
     <div
       className={cn(
         "flex",
-        "items-center",
+        "items-stretch",
         "justify-between",
         "flex-wrap",
-        "px-2",
+        "px-1",
+        "pt-1",
         "w-full",
-        "gap-2",
+        "gap-3",
+        "sm:items-center",
       )}
     >
       <div
@@ -64,18 +66,21 @@ export function DataTablePagination({
           "text-sm",
           "text-muted-foreground",
           "whitespace-nowrap",
+          "font-medium",
+          "w-full",
+          "sm:w-auto",
         )}
       >
         {typeof total === "number" ? `${total} row(s)` : null}
       </div>
-      <div className={cn("flex", "items-center", "flex-wrap", "gap-2")}>
-        <div className={cn("flex", "items-center", "gap-2")}>
+      <div className={cn("flex", "w-full", "flex-col", "gap-3", "sm:w-auto", "sm:flex-row", "sm:items-center", "sm:flex-wrap")}>
+        <div className={cn("flex", "items-center", "justify-between", "gap-2", "sm:justify-start")}>
           <span className={cn("text-sm", "font-medium")}>Rows per page</span>
           <Select
             value={`${pageSize}`}
             onValueChange={(v) => setPageSize(Number(v))}
           >
-            <SelectTrigger className={cn("h-8", "w-[70px]")}>
+            <SelectTrigger className={cn("h-9", "w-[70px]", "rounded-md", "shadow-xs")}>
               <SelectValue placeholder={pageSize} />
             </SelectTrigger>
             <SelectContent side="top">
@@ -87,14 +92,14 @@ export function DataTablePagination({
             </SelectContent>
           </Select>
         </div>
-        <div className={cn("flex", "items-center", "flex-wrap", "gap-2")}>
+        <div className={cn("flex", "items-center", "justify-between", "gap-3", "sm:justify-start", "sm:flex-wrap")}>
           <div
             className={cn(
               "flex",
               "items-center",
               "justify-center",
               "text-sm",
-              "font-medium",
+              "font-semibold",
             )}
           >
             Page {currentPage} of {pageCount}
@@ -102,7 +107,7 @@ export function DataTablePagination({
           <div className={cn("flex", "items-center", "gap-2")}>
             <Button
               variant="outline"
-              className={cn("hidden", "h-8", "w-8", "p-0", "lg:flex")}
+              className={cn("hidden", "h-9", "w-9", "rounded-md", "p-0", "shadow-xs", "lg:flex")}
               onClick={() => setCurrentPage(1)}
               disabled={currentPage === 1}
               aria-label="Go to first page"
@@ -111,7 +116,7 @@ export function DataTablePagination({
             </Button>
             <Button
               variant="outline"
-              className={cn("h-8", "w-8", "p-0")}
+              className={cn("h-9", "w-9", "rounded-md", "p-0", "shadow-xs")}
               onClick={() => setCurrentPage(currentPage - 1)}
               disabled={currentPage === 1}
               aria-label="Go to previous page"
@@ -120,7 +125,7 @@ export function DataTablePagination({
             </Button>
             <Button
               variant="outline"
-              className={cn("h-8", "w-8", "p-0")}
+              className={cn("h-9", "w-9", "rounded-md", "p-0", "shadow-xs")}
               onClick={() => setCurrentPage(currentPage + 1)}
               disabled={currentPage === pageCount}
               aria-label="Go to next page"
@@ -129,7 +134,7 @@ export function DataTablePagination({
             </Button>
             <Button
               variant="outline"
-              className={cn("hidden", "h-8", "w-8", "p-0", "lg:flex")}
+              className={cn("hidden", "h-9", "w-9", "rounded-md", "p-0", "shadow-xs", "lg:flex")}
               onClick={() => setCurrentPage(pageCount)}
               disabled={currentPage === pageCount}
               aria-label="Go to last page"

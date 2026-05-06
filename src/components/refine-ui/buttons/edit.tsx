@@ -4,6 +4,7 @@ import React from "react";
 import { type BaseKey, useEditButton } from "@refinedev/core";
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type EditButtonProps = {
   /**
@@ -52,7 +53,16 @@ export const EditButton = React.forwardRef<
 
     return (
       <Button {...rest} ref={ref} disabled={isDisabled} asChild>
-        <LinkComponent to={to} replace={false}>
+        <LinkComponent
+          to={to}
+          replace={false}
+          className={cn(
+            "flex h-full items-center justify-center gap-2 rounded-md",
+            "bg-muted/70 px-4 text-sm font-semibold",
+            "shadow-xs transition-all hover:bg-muted hover:shadow-sm",
+            "focus-visible:ring-[#d5bb87]/60",
+          )}
+        >
           {children ?? (
             <div className="flex items-center gap-2 font-semibold">
               <Pencil className="h-4 w-4" />

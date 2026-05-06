@@ -19,9 +19,9 @@ export function UserAvatar() {
   const { avatar } = user;
 
   return (
-    <Avatar className={cn("h-10", "w-10")}>
+    <Avatar className={cn("h-10", "w-10", "border", "border-[#efd9af]/40")}>
       {avatar && <AvatarImage src={avatar} alt={displayName} />}
-      <AvatarFallback>{getInitials(displayName)}</AvatarFallback>
+      <AvatarFallback className="bg-[#d5bb87] text-sm font-bold text-[#00284d]">{getInitials(displayName)}</AvatarFallback>
     </Avatar>
   );
 }

@@ -152,7 +152,7 @@ export function AdminUsersCreate() {
       <CreateViewHeader title="Crear Usuario" />
       <Form {...form}>
         <form
-          className="flex max-w-2xl flex-col gap-6"
+          className="flex w-full max-w-2xl flex-col gap-5 rounded-xl border border-border/80 bg-card p-4 shadow-[0_8px_24px_rgba(0,40,77,0.06)] md:gap-6 md:p-6"
           onSubmit={form.handleSubmit((values) =>
             onFinish({
               email: values.email,
@@ -202,7 +202,9 @@ export function AdminUsersCreate() {
               )}
             />
           </div>
-          <Button type="submit">Guardar</Button>
+          <div className="flex justify-end border-t border-border/70 pt-5">
+            <Button type="submit" className="w-full min-w-[132px] sm:w-auto">Guardar</Button>
+          </div>
         </form>
       </Form>
     </CreateView>
@@ -222,20 +224,20 @@ export function AdminUsersShow() {
     <ShowView>
       <ShowViewHeader resource="identity-users" title="Usuario" />
       <LoadingOverlay loading={query.isLoading}>
-        <div className="grid gap-4 rounded-md border bg-background p-4 md:grid-cols-2">
-          <div className="rounded-md border p-3">
+        <div className="grid gap-4 rounded-xl border border-border/80 bg-card p-4 shadow-[0_8px_24px_rgba(0,40,77,0.06)] md:grid-cols-2 md:p-6">
+          <div className="rounded-lg border border-border/75 bg-background/70 p-4 shadow-xs transition-colors hover:border-[#d5bb87]/50">
             <div className="text-xs uppercase text-muted-foreground">ID</div>
             <div className="mt-1 text-sm break-all">{user?.id ?? "—"}</div>
           </div>
-          <div className="rounded-md border p-3">
+          <div className="rounded-lg border border-border/75 bg-background/70 p-4 shadow-xs transition-colors hover:border-[#d5bb87]/50">
             <div className="text-xs uppercase text-muted-foreground">Nombre completo</div>
             <div className="mt-1 text-sm">{user?.fullName ?? "—"}</div>
           </div>
-          <div className="rounded-md border p-3">
+          <div className="rounded-lg border border-border/75 bg-background/70 p-4 shadow-xs transition-colors hover:border-[#d5bb87]/50">
             <div className="text-xs uppercase text-muted-foreground">Correo electrónico</div>
             <div className="mt-1 text-sm">{user?.email ?? "—"}</div>
           </div>
-          <div className="rounded-md border p-3 md:col-span-2">
+          <div className="rounded-lg border border-border/75 bg-background/70 p-4 shadow-xs transition-colors hover:border-[#d5bb87]/50 md:col-span-2">
             <div className="text-xs uppercase text-muted-foreground">Roles</div>
             <div className="mt-2 flex flex-wrap gap-2">
               {getUserRoles(user ?? { id: "" }).length ? (
@@ -306,13 +308,13 @@ export function AdminUsersAssignRoles() {
     <EditView>
       <EditViewHeader title={`Asignar roles a ${getUserDisplayName(user ?? { id: String(id) })}`} />
       <LoadingOverlay loading={Boolean(rolesQuery.isLoading)}>
-        <div className="flex max-w-3xl flex-col gap-4 rounded-md border bg-background p-4">
-          <div className="text-sm text-muted-foreground">
+        <div className="flex w-full max-w-3xl flex-col gap-4 rounded-xl border border-border/80 bg-card p-4 shadow-[0_8px_24px_rgba(0,40,77,0.06)] md:p-6">
+          <div className="rounded-md border border-[#d5bb87]/30 bg-[#efd9af]/18 px-4 py-3 text-sm text-muted-foreground">
             Selecciona los roles que quieres asignar a este usuario. Esta pantalla agrega roles nuevos; no elimina asignaciones existentes porque el backend solo expone el endpoint de alta.
           </div>
           <div className="grid gap-3 md:grid-cols-2">
             {roles.map((role) => (
-              <label key={role} className="flex items-center gap-3 rounded-md border p-3">
+              <label key={role} className="flex items-center gap-3 rounded-lg border border-border/75 bg-background/70 p-3 shadow-xs transition-colors hover:border-[#d5bb87]/60">
                 <Checkbox
                   checked={selectedRoles.includes(role)}
                   onCheckedChange={(checked) => {
@@ -328,11 +330,11 @@ export function AdminUsersAssignRoles() {
             ))}
           </div>
 
-          {error ? <div className="text-sm text-red-600">{error}</div> : null}
-          {success ? <div className="text-sm text-emerald-600">{success}</div> : null}
+          {error ? <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">{error}</div> : null}
+          {success ? <div className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">{success}</div> : null}
 
-          <div className="flex gap-2">
-            <Button onClick={handleSave} disabled={saving}>
+          <div className="flex justify-end gap-2 border-t border-border/70 pt-5">
+            <Button onClick={handleSave} disabled={saving} className="w-full min-w-[132px] sm:w-auto">
               {saving ? "Guardando..." : "Guardar"}
             </Button>
           </div>

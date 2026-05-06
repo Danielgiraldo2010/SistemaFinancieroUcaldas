@@ -4,7 +4,6 @@ import {
   useLogout,
   useGetIdentity,
 } from "@refinedev/core"
-import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuLabel,
@@ -15,9 +14,9 @@ import {
 import { DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { ThemeToggle } from "@/components/refine-ui/theme/theme-toggle"
 import { UserAvatar } from "@/components/refine-ui/layout/user-avatar"
+import { Breadcrumb } from "@/components/refine-ui/layout/breadcrumb"
 import { useSidebar, SidebarTrigger } from "@/components/ui/sidebar"
-import { ChevronDownIcon, LogOutIcon } from "lucide-react"
-import type { GetIdentityResponse } from "@/types"
+import { ChevronDown, LogOutIcon, ShieldCheck } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export const Header = () => {
@@ -38,15 +37,19 @@ function DesktopHeader() {
         "items-center",
         "gap-4",
         "border-b",
-        "border-border",
+        "border-[#efd9af]/20",
         "bg-sidebar",
-        "pr-3",
-        "justify-end",
+        "px-4",
+        "justify-between",
         "z-40",
+        "shadow-[0_6px_18px_rgba(0,40,77,0.14)]",
       )}
     >
-      <ThemeToggle />
-      <UserDropdown />
+      <HeaderBreadcrumb />
+      <div className={cn("flex", "items-center", "gap-3")}>
+        <ThemeToggle />
+        <UserDropdown />
+      </div>
     </header>
   )
 }
@@ -62,20 +65,21 @@ function MobileHeader() {
         "sticky",
         "top-0",
         "flex",
-        "h-12",
+        "h-14",
         "shrink-0",
         "items-center",
         "gap-2",
         "border-b",
-        "border-border",
+        "border-[#efd9af]/20",
         "bg-sidebar",
-        "pr-3",
+        "px-3",
         "justify-between",
         "z-40",
+        "shadow-[0_6px_18px_rgba(0,40,77,0.14)]",
       )}
     >
       <SidebarTrigger
-        className={cn("text-muted-foreground", "rotate-180", "ml-1", {
+        className={cn("h-9 w-9 text-[#efd9af] hover:bg-[#045389] hover:text-white", "rotate-180", {
           "opacity-0": open,
           "opacity-100": !open || isMobile,
           "pointer-events-auto": !open || isMobile,
@@ -88,6 +92,8 @@ function MobileHeader() {
           "whitespace-nowrap",
           "flex",
           "flex-row",
+          "min-w-0",
+          "flex-1",
           "h-full",
           "items-center",
           "justify-start",
@@ -95,140 +101,132 @@ function MobileHeader() {
           "transition-discrete",
           "duration-200",
           {
-            "pl-3": !open,
-            "pl-5": open,
+            "pl-1": !open,
+            "pl-2": open,
           },
         )}
       >
-        <div>{title.icon}</div>
+        <div className="shrink-0 [&_img]:brightness-0 [&_img]:invert">{title.icon}</div>
         <h2
           className={cn(
             "text-sm",
             "font-bold",
+            "text-white",
+            "truncate",
             "transition-opacity",
             "duration-200",
-            {
-              "opacity-0": !open,
-              "opacity-100": open,
-            },
+            "opacity-100",
           )}
         >
           {title.text}
         </h2>
       </div>
 
-      <div className={cn("flex", "items-center", "gap-2")}>
+      <div className="flex shrink-0 items-center gap-2">
         <ThemeToggle className={cn("h-8", "w-8")} />
-        <UserDropdown compact />
+        <UserDropdown />
       </div>
     </header>
   )
 }
 
-type UserDropdownProps = {
-  compact?: boolean
+function HeaderBreadcrumb() {
+  return (
+    <div
+      className={cn(
+        "min-w-0 flex-1",
+        "[&_ol]:text-[#efd9af]/85",
+        "[&_ol]:gap-2",
+        "[&_a]:inline-flex [&_a]:items-center",
+        "[&_a]:font-medium [&_a]:text-[#efd9af]/90",
+        "[&_a]:transition-colors [&_a]:hover:text-white",
+        "[_[data-slot=breadcrumb-page]]:font-semibold",
+        "[_[data-slot=breadcrumb-page]]:text-white",
+        "[_[data-slot=breadcrumb-separator]]:text-[#d5bb87]/80",
+      )}
+    >
+      <Breadcrumb />
+    </div>
+  )
 }
 
-const UserDropdown = ({ compact = false }: UserDropdownProps) => {
+const UserDropdown = () => {
   const { mutate: logout, isPending: isLoggingOut } = useLogout()
+  const { data: user, isLoading } = useGetIdentity<{
+    email?: string
+    fullName?: string
+    firstName?: string
+    lastName?: string
+    role?: string
+    roles?: string[]
+    roleNames?: string[]
+  }>()
 
   const authProvider = useActiveAuthProvider()
-  const { data: user, isLoading } = useGetIdentity<GetIdentityResponse>()
 
   if (!authProvider?.getIdentity) {
     return null
   }
 
-  const displayName = getDisplayName(user)
-  const email = user?.email ?? ""
+  const displayName =
+    user?.fullName ||
+    [user?.firstName, user?.lastName].filter(Boolean).join(" ") ||
+    user?.email ||
+    "Usuario"
 
-  // Estado de carga
-  const loadingContent = (
-    <Button
-      variant="ghost"
-      className={cn(
-        "h-auto",
-        "px-2",
-        "py-1.5",
-        "gap-2",
-        "justify-start",
-        "text-left",
-        "hover:bg-accent",
-        "rounded-full",
-      )}
-    >
-      <UserAvatar />
-      <div className={cn("flex", "min-w-0", "flex-col", "items-start")}>
-        <span className={cn("h-4", "w-24", "rounded", "bg-muted")} />
-      </div>
-    </Button>
-  )
-
-  if (isLoading) {
-    return loadingContent
-  }
+  const roleLabel =
+    user?.role || user?.roles?.[0] || user?.roleNames?.[0] || "Administrador"
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
+        <button
+          type="button"
           className={cn(
-            "h-auto",
-            "px-2",
-            "py-1.5",
-            "gap-2",
-            "justify-start",
-            "text-left",
-            "hover:bg-accent",
-            "rounded-full",
+            "flex h-11 items-center gap-3 rounded-full",
+            "border border-[#efd9af]/24 bg-white/10 py-1 pl-1 pr-3",
+            "max-w-[52vw] md:max-w-none",
+            "text-left text-white shadow-sm backdrop-blur-sm",
+            "transition-all hover:bg-white/15 hover:shadow-md",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d5bb87]/70",
           )}
         >
           <UserAvatar />
-          <div className={cn("flex", "min-w-0", "flex-col", "items-start")}>
-            <span
-              className={cn(
-                "max-w-[10rem]",
-                "truncate",
-                "text-sm",
-                "font-medium",
-              )}
-            >
+          <span className={cn("hidden", "min-w-0", "flex-col", "md:flex")}>
+            <span className="max-w-[180px] truncate text-sm font-semibold leading-4">
+              {isLoading ? "Cargando..." : displayName}
+            </span>
+            <span className="flex items-center gap-1 text-xs font-medium leading-4 text-[#efd9af]">
+              <ShieldCheck className="h-3.5 w-3.5" />
+              {roleLabel}
+            </span>
+          </span>
+          <ChevronDown className="h-4 w-4 text-[#efd9af]" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        align="end"
+        className="w-64 border-[#d5bb87]/30 shadow-[0_16px_36px_rgba(0,40,77,0.16)]"
+      >
+        <DropdownMenuLabel className="px-3 py-2">
+          <div className="flex flex-col gap-1">
+            <span className="truncate text-sm font-semibold text-[#00284d] dark:text-white">
               {displayName}
             </span>
-            {!compact && (
-              <span
-                className={cn(
-                  "max-w-[10rem]",
-                  "truncate",
-                  "text-xs",
-                  "text-muted-foreground",
-                )}
-              >
-                {email}
+            {user?.email && (
+              <span className="truncate text-xs text-muted-foreground">
+                {user.email}
               </span>
             )}
-          </div>
-          <ChevronDownIcon className={cn("size-4", "text-muted-foreground")} />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className={cn("min-w-56")}>
-        <DropdownMenuLabel className={cn("p-3")}>
-          <div className={cn("flex", "items-center", "gap-3")}>
-            <UserAvatar />
-            <div className={cn("flex", "min-w-0", "flex-col")}>
-              <span className={cn("truncate", "text-sm", "font-medium")}>
-                {displayName}
-              </span>
-              <span className={cn("truncate", "text-xs", "text-muted-foreground")}>
-                {email}
-              </span>
-            </div>
+            <span className="mt-1 inline-flex w-fit items-center gap-1 rounded-full bg-[#d5bb87]/25 px-2 py-0.5 text-xs font-semibold text-[#00284d] dark:text-[#efd9af]">
+              <ShieldCheck className="h-3 w-3" />
+              {roleLabel}
+            </span>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          variant="destructive"
+          className="cursor-pointer rounded-md px-3 py-2"
           onSelect={() => {
             logout()
           }}
@@ -239,15 +237,6 @@ const UserDropdown = ({ compact = false }: UserDropdownProps) => {
       </DropdownMenuContent>
     </DropdownMenu>
   )
-}
-
-const getDisplayName = (user?: GetIdentityResponse | null) => {
-  if (!user) return "Usuario"
-  if (user.fullName) return user.fullName
-  const parts = [user.firstName, user.lastName].filter(Boolean)
-  if (parts.length > 0) return parts.join(" ")
-  if (user.email) return user.email
-  return "Usuario"
 }
 
 Header.displayName = "Header"

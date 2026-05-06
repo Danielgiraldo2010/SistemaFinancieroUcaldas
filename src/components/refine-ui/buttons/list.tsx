@@ -4,6 +4,7 @@ import React from "react";
 import { type BaseKey, useListButton } from "@refinedev/core";
 import { Button } from "@/components/ui/button";
 import { List } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type ListButtonProps = {
   /**
@@ -42,7 +43,14 @@ export const ListButton = React.forwardRef<
 
   return (
     <Button {...rest} ref={ref} disabled={isDisabled} asChild>
-      <LinkComponent to={to} replace={false}>
+      <LinkComponent
+        to={to}
+        replace={false}
+        className={cn(
+          "flex items-center justify-center gap-2",
+          rest.className,
+        )}
+      >
         {children ?? (
           <div className="flex items-center gap-2 font-semibold">
             <List className="w-4 h-4" />

@@ -4,6 +4,7 @@ import React from "react";
 import { type BaseKey, useCloneButton } from "@refinedev/core";
 import { Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type CloneButtonProps = {
   /**
@@ -51,7 +52,16 @@ export const CloneButton = React.forwardRef<
     if (isHidden) return null;
 
     return (
-      <Button {...rest} ref={ref} disabled={isDisabled} asChild>
+      <Button
+        {...rest}
+        ref={ref}
+        disabled={isDisabled}
+        asChild
+        className={cn(
+          "h-9 rounded-md px-4 shadow-sm transition-all hover:shadow-md focus-visible:ring-[#d5bb87]/60",
+          rest.className,
+        )}
+      >
         <LinkComponent to={to} replace={false}>
           {children ?? (
             <div className="flex items-center gap-2 font-semibold">
