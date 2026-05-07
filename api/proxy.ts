@@ -11,6 +11,24 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     const normalizedPath = String(path).replace(/^\//, "");
     const target = `${BACKEND_URL}/${normalizedPath}`;
 
+    // If this is a GET for an auth SPA route, serve the SPA index.html
+    // so navigation to /login, /register, etc. doesn't get proxied as GET to backend.
+    const spaAuthRoutes = ["login", "register", "forgotPassword", "refresh"];
+    if (req.method === "GET" && spaAuthRoutes.includes(normalizedPath)) {
+      try {
+        const host = String(req.headers["x-forwarded-host"] || req.headers.host || "");
+        const proto = String(req.headers["x-forwarded-proto"] || "https");
+        const indexUrl = `${proto}://${host}/index.html`;
+        const indexResp = await fetch(indexUrl);
+        const indexText = await indexResp.text();
+        res.setHeader("Content-Type", "text/html");
+        res.status(200).send(indexText);
+        return;
+      } catch (err) {
+        // If serving index fails, fall through to proxy behavior below
+      }
+    }
+
     const headers: Record<string, string> = {};
     Object.entries(req.headers).forEach(([key, value]) => {
       if (!["host", "connection", "content-length"].includes(key.toLowerCase()) && value) {
