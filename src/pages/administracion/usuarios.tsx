@@ -57,6 +57,21 @@ function getUserDisplayName(user: IdentityUser) {
   return user.fullName || user.email || user.id;
 }
 
+function RolesCell({ user }: { user: IdentityUser }) {
+  const roles = getUserRoles(user);
+  if (!roles.length) return <span className="text-muted-foreground">—</span>;
+
+  return (
+    <div className="flex flex-wrap gap-1">
+      {roles.map((role) => (
+        <Badge key={role} variant="secondary">
+          {role}
+        </Badge>
+      ))}
+    </div>
+  );
+}
+
 export function AdminUsersList() {
   const columns = useMemo<ColumnDef<IdentityUser>[]>(
     () => [
@@ -75,26 +90,14 @@ export function AdminUsersList() {
         id: "roles",
         accessorFn: (row: IdentityUser) => getUserRoles(row).join(", "),
         header: "Roles",
-        cell: ({ row }: any) => {
-          const roles = getUserRoles(row.original);
-          if (!roles.length) return <span className="text-muted-foreground">—</span>;
-          return (
-            <div className="flex flex-wrap gap-1">
-              {roles.map((role) => (
-                <Badge key={role} variant="secondary">
-                  {role}
-                </Badge>
-              ))}
-            </div>
-          );
-        },
+        cell: ({ row }: any) => <RolesCell user={row.original} />,
       },
       {
         id: "actions",
         header: "Acciones",
         size: 340,
         cell: ({ row }: any) => (
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 items-center gap-2">
             <ShowButton resource="identity-users" recordItemId={row.original.id} size="sm" variant="outline">
               <Eye className="mr-1 h-4 w-4" />
               Ver

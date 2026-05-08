@@ -70,8 +70,8 @@ export const DeleteButton = React.forwardRef<
       ref={ref}
       disabled={isDisabled}
       className={cn(
-        "h-8 rounded-md text-sm font-semibold",
-        !isIconSize && "px-4",
+        "rounded-md text-sm font-semibold",
+        isIconSize ? "h-full p-0" : "h-9 px-4",
         "shadow-xs transition-all hover:shadow-sm",
         "focus-visible:ring-[#d5bb87]/60",
         rest.className,

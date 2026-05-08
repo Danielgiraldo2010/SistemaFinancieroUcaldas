@@ -48,6 +48,7 @@ export const EditButton = React.forwardRef<
 
     const isDisabled = disabled || rest.disabled;
     const isHidden = hidden || rest.hidden;
+    const isIconSize = String(rest.size ?? "").startsWith("icon");
 
     if (isHidden) return null;
 
@@ -57,8 +58,10 @@ export const EditButton = React.forwardRef<
           to={to}
           replace={false}
           className={cn(
-            "flex h-full items-center justify-center gap-2 rounded-md",
-            "bg-muted/70 px-4 text-sm font-semibold",
+            "flex items-center justify-center rounded-md",
+            isIconSize
+              ? "h-full gap-0 bg-muted/70 p-0"
+              : "h-full gap-2 bg-muted/70 px-4 text-sm font-semibold",
             "shadow-xs transition-all hover:bg-muted hover:shadow-sm",
             "focus-visible:ring-[#d5bb87]/60",
           )}

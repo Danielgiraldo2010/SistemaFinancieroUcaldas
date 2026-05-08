@@ -21,6 +21,7 @@ import { authProvider } from "@/providers/auth";
 import { APP_NAME } from "@/providers/constants";
 
 import PlaceholderPage from "@/pages/placeholder";
+import { DashboardPage } from "@/pages/dashboard";
 import UnidadesEjectorasList from "@/pages/dbo-unidades-ejecutoras/list";
 import { UnidadesEjectorasCreate, UnidadesEjectorasEdit } from "@/pages/dbo-unidades-ejecutoras/form";
 import { CdpList, CdpCreate, CdpEdit, CdpShow } from "@/pages/dbo-cdp";
@@ -96,6 +97,15 @@ const App = () => {
           },
         }}
         resources={[
+          {
+            name: "dashboard",
+            list: "/dashboard",
+            meta: {
+              label: "Inicio",
+              icon: <BarChart2 className="h-4 w-4" />,
+            },
+          },
+
           // ── ADMINISTRACIÓN GROUP ───────────────────────────
           {
             name: "group-administracion",
@@ -531,8 +541,8 @@ const App = () => {
                 </Layout>
               </Authenticated>
             }>
-            <Route index element={<NavigateToResource resource="dbo-cdp" fallbackTo="/dashboard" />} />
-            <Route path="/dashboard" element={<NavigateToResource resource="dbo-cdp" fallbackTo="/login" />} />
+            <Route index element={<NavigateToResource resource="dashboard" fallbackTo="/dashboard" />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
 
             {/* Administración */}
             <Route path="/administracion/usuarios" element={<AdminUsersList />} />

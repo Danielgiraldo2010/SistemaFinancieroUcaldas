@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type HttpError, useList, useOne, useResourceParams } from "@refinedev/core";
+import { type HttpError, useOne, useResourceParams } from "@refinedev/core";
 import { useTable } from "@refinedev/react-table";
 import { useForm } from "@refinedev/react-hook-form";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -25,8 +25,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { DynamicOptionField } from "@/components/refine-ui/form/dynamic-option-field";
 
 export type CrudFieldType = "text" | "textarea" | "number" | "datetime" | "date" | "boolean" | "select";
 
@@ -48,7 +48,10 @@ export type CrudField = {
   optionResource?: string;
   optionLabelKey?: string;
   optionValueKey?: string;
+  optionSearchKey?: string;
+  optionLabelResolver?: (record: Record<string, any>) => string;
   selectValueType?: "string" | "number";
+  searchable?: boolean;
   display?: (value: unknown, record: Record<string, any>) => React.ReactNode;
   className?: string;
 };
@@ -143,50 +146,6 @@ function normalizeDisplayValue(field: CrudField, value: unknown, record: Record<
   }
   if (isNil(value) || value === "") return <span className="text-muted-foreground">—</span>;
   return <span>{String(value)}</span>;
-}
-
-function CrudSelectField({ field, control }: { field: CrudField; control: any }) {
-  const hasRemoteOptions = Boolean(field.optionResource);
-  const remote = useList<Record<string, any>>({
-    resource: field.optionResource ?? "",
-    pagination: { currentPage: 1, pageSize: 200 },
-    queryOptions: { enabled: hasRemoteOptions },
-  });
-  const remoteItems = ((remote.result?.data ?? []) as Record<string, any>[]);
-  const remoteOptions = remoteItems
-    .map((item: Record<string, any>) => ({
-      label: String(item[field.optionLabelKey ?? "nombre"] ?? item[field.optionValueKey ?? "id"] ?? item.id),
-      value: String(item[field.optionValueKey ?? "id"] ?? item.id),
-    }))
-    .filter((option, index, self) => self.findIndex((entry) => entry.value === option.value) === index);
-  const options = hasRemoteOptions ? remoteOptions : (field.options ?? []);
-
-  return (
-    <FormField
-      control={control}
-      name={field.key as any}
-      render={({ field: formField }) => (
-        <FormItem>
-          <FormLabel>{field.label}{field.required ? " *" : ""}</FormLabel>
-          <Select value={formField.value ?? ""} onValueChange={formField.onChange}>
-            <FormControl>
-              <SelectTrigger>
-                <SelectValue placeholder={field.placeholder ?? `Seleccionar ${field.label.toLowerCase()}`} />
-              </SelectTrigger>
-            </FormControl>
-            <SelectContent>
-              {options.map((option: CrudFieldOption) => (
-                <SelectItem key={`${field.key}-${option.value}`} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  );
 }
 
 function buildSchema(fields: CrudField[]) {
@@ -311,7 +270,7 @@ export function createCrudPages(config: CrudResourceConfig) {
             cell: ({ row }: any) => {
               const recordItemId = row.original.id;
               return (
-                <div className="flex gap-1">
+                <div className="flex items-center justify-center gap-1">
                   <ShowButton resource={config.resource} recordItemId={recordItemId} size="icon-sm" variant="outline">
                     <Eye className="h-4 w-4" />
                   </ShowButton>
@@ -447,7 +406,24 @@ export function createCrudPages(config: CrudResourceConfig) {
                 }
 
                 if (field.type === "select") {
-                  return <CrudSelectField key={field.key} field={field} control={form.control} />;
+                  return (
+                    <DynamicOptionField
+                      key={field.key}
+                      control={form.control}
+                      name={field.key}
+                      label={field.label}
+                      required={field.required}
+                      placeholder={field.placeholder}
+                      options={field.options}
+                      optionResource={field.optionResource}
+                      optionLabelKey={field.optionLabelKey}
+                      optionValueKey={field.optionValueKey}
+                      optionSearchKey={field.optionSearchKey}
+                      optionLabelResolver={field.optionLabelResolver}
+                      searchable={field.searchable}
+                      className={field.className}
+                    />
+                  );
                 }
 
                 const inputType = field.type === "number" ? "number" : field.type === "datetime" ? "datetime-local" : field.type === "date" ? "date" : "text";

@@ -1,7 +1,7 @@
 import { useForm } from "@refinedev/react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { HttpError, useSelect } from "@refinedev/core";
+import { HttpError } from "@refinedev/core";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,6 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { CreateView, CreateViewHeader } from "@/components/refine-ui/views/create-view";
 import { EditView, EditViewHeader } from "@/components/refine-ui/views/edit-view";
 import { LoadingOverlay } from "@/components/refine-ui/layout/loading-overlay";
+import { DynamicOptionField } from "@/components/refine-ui/form/dynamic-option-field";
 
 const formSchema = z.object({
   codigo: z.string().min(1, "El código es requerido"),
@@ -50,13 +51,6 @@ function UnidadesEjectorasForm({ isEdit = false }: { isEdit?: boolean }) {
     refineCoreProps: {
       resource: "dbo-unidades-ejecutoras",
     },
-  });
-
-  const { options: padreOptions } = useSelect<UnidadEjecutora>({
-    resource: "dbo-unidades-ejecutoras",
-    optionLabel: "nombre",
-    optionValue: "id",
-    pagination: { pageSize: 100 },
   });
 
   const isLoading = query?.isLoading ?? false;
@@ -151,32 +145,16 @@ function UnidadesEjectorasForm({ isEdit = false }: { isEdit?: boolean }) {
             )}
           />
 
-          <FormField
+          <DynamicOptionField
             control={form.control}
             name="padreId"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Unidad Padre</FormLabel>
-                <Select
-                  onValueChange={(v) => field.onChange(v === "none" ? null : Number(v))}
-                  value={field.value != null ? String(field.value) : "none"}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Sin unidad padre" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="none">Sin unidad padre</SelectItem>
-                    {padreOptions?.map((opt) => (
-                      <SelectItem key={String(opt.value)} value={String(opt.value)}>
-                        {opt.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="Unidad Padre"
+            required={false}
+            placeholder="Sin unidad padre"
+            optionResource="dbo-unidades-ejecutoras"
+            optionLabelKey="nombre"
+            optionValueKey="id"
+            searchable
           />
 
           <FormField

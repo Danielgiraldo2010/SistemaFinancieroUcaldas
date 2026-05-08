@@ -4,6 +4,7 @@ import {
   useLogout,
   useGetIdentity,
 } from "@refinedev/core"
+import { useNavigate } from "react-router"
 import {
   DropdownMenu,
   DropdownMenuLabel,
@@ -152,6 +153,7 @@ function HeaderBreadcrumb() {
 
 const UserDropdown = () => {
   const { mutate: logout, isPending: isLoggingOut } = useLogout()
+  const navigate = useNavigate()
   const { data: user, isLoading } = useGetIdentity<{
     email?: string
     fullName?: string
@@ -228,7 +230,14 @@ const UserDropdown = () => {
         <DropdownMenuItem
           className="cursor-pointer rounded-md px-3 py-2"
           onSelect={() => {
-            logout()
+            logout(
+              { redirectPath: false },
+              {
+                onSuccess: () => {
+                  navigate("/login", { replace: true })
+                },
+              },
+            )
           }}
         >
           <LogOutIcon className={cn("size-4")} />

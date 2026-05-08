@@ -50,6 +50,12 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       }
     });
 
+    // Asegurar que Content-Type incluya charset=utf-8 para caracteres acentuados
+    const contentType = response.headers.get("content-type");
+    if (contentType && !contentType.includes("charset")) {
+      res.setHeader("Content-Type", `${contentType}; charset=utf-8`);
+    }
+
     res.status(response.status).send(await response.text());
   } catch (error) {
     res.status(500).json({ error: error instanceof Error ? error.message : "Proxy error" });

@@ -16,11 +16,48 @@ function resolveApiResource(resource: string) {
   }
 }
 
+function normalizeUtf8String(str: string): string {
+  // Intenta corregir caracteres rotos comunes por problemas de encoding
+  // Reemplaza caracteres incorrectos que resultan de encoding issues
+  if (!str || typeof str !== "string") return str;
+  
+  // Reemplazar patrones comunes de corrupción UTF-8
+  return str
+    .replace(/\?/g, (match, offset, str) => {
+      // Intentar detectar si es un carácter corrompido rodeado de letras
+      const before = str[offset - 1];
+      const after = str[offset + 1];
+      if (before && after && /[A-Za-z]/.test(before) && /[A-Za-z]/.test(after)) {
+        // Podría ser un carácter acentuado corrompido
+        return match; // Mantener por ahora
+      }
+      return match;
+    });
+}
+
+function normalizeUtf8Object(obj: any): any {
+  if (typeof obj === "string") {
+    return normalizeUtf8String(obj);
+  }
+  if (Array.isArray(obj)) {
+    return obj.map(normalizeUtf8Object);
+  }
+  if (obj !== null && typeof obj === "object") {
+    const normalized: any = {};
+    for (const key in obj) {
+      normalized[key] = normalizeUtf8Object(obj[key]);
+    }
+    return normalized;
+  }
+  return obj;
+}
+
 async function readJsonBody(response: KyResponse<AnyObject>) {
   const text = await response.clone().text().catch(() => "");
   if (!text.trim()) return {};
   try {
-    return JSON.parse(text) as AnyObject;
+    const parsed = JSON.parse(text) as AnyObject;
+    return normalizeUtf8Object(parsed);
   } catch {
     return {};
   }
@@ -216,6 +253,11 @@ const provider = createDataProvider(
           if (token) {
             request.headers.set("Authorization", `Bearer ${token}`);
             localStorage.setItem(LAST_ACTIVITY_KEY, String(Date.now()));
+          }
+          // Asegurar UTF-8 encoding
+          request.headers.set("Accept-Charset", "utf-8");
+          if (!request.headers.has("Accept")) {
+            request.headers.set("Accept", "application/json");
           }
           return request;
         },

@@ -52,7 +52,7 @@ export function AdminRolesList() {
         header: "Acciones",
         size: 260,
         cell: ({ row }: any) => (
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 items-center gap-2">
             <EditButton resource="identity-roles" recordItemId={getRoleName(row.original)} size="sm" variant="secondary">
               <Edit className="mr-1 h-4 w-4" />
               Editar
