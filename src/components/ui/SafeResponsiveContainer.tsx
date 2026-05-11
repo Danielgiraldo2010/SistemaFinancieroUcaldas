@@ -40,7 +40,7 @@ export default function SafeResponsiveContainer({ children, wrapperClassName, ..
   }, [props.height]);
 
   return (
-    <div ref={ref} className={wrapperClassName ?? "w-full min-w-0"}>
+    <div ref={ref} style={{ width: "100%", height: "100%" }} className={wrapperClassName ?? "w-full min-w-0"}>
       {sizeReady ? <RechartsResponsiveContainer {...props}>{children}</RechartsResponsiveContainer> : null}
     </div>
   );
