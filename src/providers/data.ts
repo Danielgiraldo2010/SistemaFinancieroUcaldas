@@ -11,6 +11,8 @@ function resolveApiResource(resource: string) {
       return "api/identity/users";
     case "identity-roles":
       return "api/identity/roles";
+    case "dbo-apoyomatricula":
+      return "api/dbo-apoyos-matricula";
     default:
       return `api/${resource}`;
   }

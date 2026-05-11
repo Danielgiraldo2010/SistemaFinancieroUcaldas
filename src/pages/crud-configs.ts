@@ -524,6 +524,159 @@ export const apoyoMatriculaConfig: CrudResourceConfig = {
   listFields: ["nombre", "convenio", "apoyoNormalizadoId"],
 };
 
+export const ejecucionMensualConfig: CrudResourceConfig = {
+  resource: "dbo-ejecucion-mensual",
+  title: "Ejecución Presupuestal",
+  singularTitle: "Ejecución Presupuestal",
+  primaryField: "vigencia",
+  fields: [
+    number("vigencia", "Vigencia"),
+    number("mes", "Mes"),
+    relation("rubroGastoId", "Rubro gasto", "dbo-rubros-gasto"),
+    number("presupuestoMensual", "Presupuesto mensual"),
+    number("ejecutadoMensual", "Ejecutado mensual"),
+    relation("unidadEjecutoraId", "Unidad ejecutora", "dbo-unidades-ejecutoras"),
+  ],
+  listFields: ["vigencia", "mes", "rubroGastoId", "presupuestoMensual", "ejecutadoMensual", "unidadEjecutoraId"],
+};
+
+export const modificacionesDetalleConfig: CrudResourceConfig = {
+  resource: "dbo-modificaciones-detalle",
+  title: "Modificaciones Presupuestales",
+  singularTitle: "Modificación Presupuestal",
+  primaryField: "solicitudId",
+  fields: [
+    number("solicitudId", "Solicitud"),
+    text("tipoMovimiento", "Tipo de movimiento"),
+    bool("esIngreso", "Es ingreso"),
+    number("presupuestoId", "Presupuesto", false),
+    number("rubroId", "Rubro", false),
+    number("valor", "Valor"),
+    textarea("descripcion", "Descripción", false),
+    number("presupuestoGastoId", "Presupuesto gasto", false),
+    number("presupuestoIngresoId", "Presupuesto ingreso", false),
+    number("rubroGastoIdFk", "Rubro gasto", false),
+    number("rubroIngresoIdFk", "Rubro ingreso", false),
+  ],
+  listFields: ["solicitudId", "tipoMovimiento", "esIngreso", "rubroId", "valor"],
+};
+
+export const fechasLimitePresupuestalesConfig: CrudResourceConfig = {
+  resource: "dbo-fechas-limite-presupuestales",
+  title: "Fechas Límite Presupuestales",
+  singularTitle: "Fecha Límite Presupuestal",
+  primaryField: "nombre",
+  fields: [
+    number("vigencia", "Vigencia"),
+    text("tipoLimite", "Tipo límite"),
+    text("nombre", "Nombre"),
+    datetime("fechaLimite", "Fecha límite"),
+    datetime("fechaRecordatorio", "Fecha recordatorio", false),
+    number("diasAnticipacionAlerta", "Días anticipación alerta"),
+    textarea("descripcion", "Descripción", false),
+    relation("unidadEjecutoraId", "Unidad ejecutora", "dbo-unidades-ejecutoras", false),
+  ],
+  listFields: ["vigencia", "tipoLimite", "nombre", "fechaLimite", "fechaRecordatorio", "unidadEjecutoraId"],
+};
+
+export const estructurasFinancierasConfig: CrudResourceConfig = {
+  resource: "dbo-estructuras-financieras",
+  title: "Estructuras Financieras",
+  singularTitle: "Estructura Financiera",
+  primaryField: "codigo",
+  fields: [
+    text("codigo", "Código"),
+    text("nombre", "Nombre"),
+    text("tipo", "Tipo"),
+    number("nivel", "Nivel"),
+    number("padreId", "Padre", false),
+    textarea("descripcion", "Descripción", false),
+  ],
+  listFields: ["codigo", "nombre", "tipo", "nivel", "padreId"],
+};
+
+export const descuentosConfig: CrudResourceConfig = {
+  resource: "dbo-descuento",
+  title: "Descuentos",
+  singularTitle: "Descuento",
+  primaryField: "nombre",
+  fields: [
+    text("nombre", "Nombre"),
+    textarea("descripcion", "Descripción", false),
+    number("porcentaje", "Porcentaje"),
+  ],
+  listFields: ["nombre", "porcentaje"],
+};
+
+export const descuentoMatriculaConfig: CrudResourceConfig = {
+  resource: "dbo-descuento-matricula",
+  title: "Descuento de Matrícula",
+  singularTitle: "Descuento de Matrícula",
+  primaryField: "id",
+  fields: [],
+  formFields: [],
+  listFields: [],
+};
+
+export const financiacionMatriculaConfig: CrudResourceConfig = {
+  resource: "dbo-financiacionmatricula",
+  title: "Financiación Matrícula",
+  singularTitle: "Financiación Matrícula",
+  primaryField: "idEstudiante",
+  fields: [
+    number("idEstudiante", "Estudiante"),
+    relation("idApoyo", "Apoyo", "dbo-apoyos-matricula"),
+    number("porcentajeMatricula", "Porcentaje matrícula"),
+    number("valor", "Valor"),
+  ],
+  listFields: ["idEstudiante", "idApoyo", "porcentajeMatricula", "valor"],
+};
+
+export const matriculasApoyosConfig: CrudResourceConfig = {
+  resource: "dbo-matriculas-apoyos",
+  title: "Matrículas Apoyos",
+  singularTitle: "Matrícula Apoyo",
+  primaryField: "matriculaProyectadaId",
+  fields: [
+    number("matriculaProyectadaId", "Matrícula proyectada"),
+    relation("apoyoId", "Apoyo", "dbo-apoyos-matricula"),
+    number("porcentajeAplicacion", "Porcentaje aplicación"),
+    number("valor", "Valor"),
+  ],
+  listFields: ["matriculaProyectadaId", "apoyoId", "porcentajeAplicacion", "valor"],
+};
+
+export const matriculasProyectadasConfig: CrudResourceConfig = {
+  resource: "dbo-matriculas-proyectadas",
+  title: "Matrículas Proyectadas",
+  singularTitle: "Matrícula Proyectada",
+  primaryField: "vigencia",
+  fields: [
+    number("vigencia", "Vigencia"),
+    number("periodo", "Periodo"),
+    relation("programaAcademicoId", "Programa académico", "dbo-programas-academicos"),
+    relation("municipioId", "Municipio", "dbo-municipio"),
+    number("cohorte", "Cohorte"),
+    number("numeroEstudiantes", "Número estudiantes"),
+    number("valorMatriculaBase", "Valor matrícula base"),
+    number("porcentajeDescuentoVotacion", "Descuento votación"),
+    number("porcentajeOtrosDescuentos", "Otros descuentos"),
+    relation("unidadEjecutoraId", "Unidad ejecutora", "dbo-unidades-ejecutoras"),
+    relation("rubroIngresoId", "Rubro ingreso", "dbo-rubros-ingreso"),
+    relation("fuenteRecursoId", "Fuente recurso", "dbo-fuentes-recursos"),
+    number("porcentajeDescuentoGratuidad", "Descuento gratuidad"),
+    textarea("descripcion", "Descripción", false),
+    text("entidadGiro", "Entidad giro", false),
+    text("numeroResolucion", "Número resolución", false),
+    datetime("fechaGiro", "Fecha giro", false),
+    number("valorGirado", "Valor girado", false),
+    text("tipoMatricula", "Tipo matrícula", false),
+    number("transferenciaInternaId", "Transferencia interna", false),
+    number("coberturaPicId", "Cobertura PIC", false),
+  ],
+  listFields: ["vigencia", "periodo", "programaAcademicoId", "municipioId", "numeroEstudiantes", "valorMatriculaBase"],
+};
+
 export const periodosAcademicosConfig: CrudResourceConfig = {
   resource: "dbo-periodos-academicos",
   title: "Períodos Académicos",

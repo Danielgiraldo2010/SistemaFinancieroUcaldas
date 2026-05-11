@@ -53,6 +53,10 @@ function singularizeLabel(label: string) {
       if (word.length <= 3) return word;
       const lower = stripAccents(word.toLowerCase());
       if (lower.endsWith("iones")) return word.slice(0, -3);
+      // Handle plurals like "estudiantes" -> "estudiante"
+      if (lower.endsWith("antes") || lower.endsWith("entes")) {
+        return word.slice(0, -2) + "e";
+      }
       if (lower.endsWith("es")) return word.slice(0, -2);
       if (lower.endsWith("s")) return word.slice(0, -1);
       return word;

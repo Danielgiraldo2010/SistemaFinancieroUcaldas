@@ -6,6 +6,7 @@ import type { Column } from "@tanstack/react-table";
 import { flexRender } from "@tanstack/react-table";
 import { Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useCallback } from "react";
 
 import {
   Table,
@@ -51,6 +52,39 @@ export function DataTable<TData extends BaseRecord>({
     horizontal: false,
     vertical: false,
   });
+  const [columnWidths, setColumnWidths] = useState<Record<string, number | undefined>>({});
+
+  const toggleTitleSize = useCallback((columnId: string, el: HTMLElement | null) => {
+    setColumnWidths((prev) => {
+      if (prev[columnId]) {
+        const next = { ...prev };
+        delete next[columnId];
+        return next;
+      }
+      if (!el) return prev;
+      const rect = el.getBoundingClientRect();
+      // add some padding so title doesn't touch edges
+      const width = Math.ceil(rect.width) + 24;
+      return { ...prev, [columnId]: width };
+    });
+  }, []);
+
+  const measureColumnContent = useCallback((columnId: string) => {
+    if (!tableRef.current) return;
+    const table = tableRef.current;
+    const nodes = Array.from(table.querySelectorAll(`[data-colid="${columnId}"]`));
+    let max = 0;
+    for (const node of nodes) {
+      // look for inner content wrapper
+      const inner = node.querySelector("div");
+      const target = inner ?? node;
+      const rect = (target as HTMLElement).getBoundingClientRect();
+      if (rect.width > max) max = rect.width;
+    }
+    if (max <= 0) return;
+    const width = Math.ceil(max) + 24;
+    setColumnWidths((prev) => ({ ...prev, [columnId]: width }));
+  }, []);
 
   useEffect(() => {
     const checkOverflow = () => {
@@ -97,7 +131,7 @@ export function DataTable<TData extends BaseRecord>({
         <Table
           ref={tableRef}
           style={{
-            tableLayout: "fixed",
+            tableLayout: "auto",
             width: "100%",
             minWidth: tableMinWidth,
           }}
@@ -115,15 +149,23 @@ export function DataTable<TData extends BaseRecord>({
                         ...getCommonStyles({
                           column: header.column,
                           isOverflowing: isOverflowing,
+                          columnWidths,
                         }),
                       }}
                     >
                       {isPlaceholder ? null : (
                         <div className={cn("flex", "items-center", "gap-1")}>
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                          <button
+                            type="button"
+                            onClick={(e) => toggleTitleSize(header.column.id, e.currentTarget as HTMLElement)}
+                            className="flex items-center gap-1"
+                            title={columnWidths[header.column.id] ? "Restaurar ancho" : "Ajustar al título"}
+                          >
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                          </button>
                         </div>
                       )}
                     </TableHead>
@@ -148,9 +190,10 @@ export function DataTable<TData extends BaseRecord>({
                             ...getCommonStyles({
                               column,
                               isOverflowing: isOverflowing,
+                              columnWidths,
                             }),
                           }}
-                          className={cn("truncate")}
+                          className={cn(columnWidths[column.id] ? "whitespace-nowrap" : "truncate")}
                         >
                           <div className="h-8" />
                         </TableCell>
@@ -194,10 +237,11 @@ export function DataTable<TData extends BaseRecord>({
                             ...getCommonStyles({
                               column: cell.column,
                               isOverflowing: isOverflowing,
+                              columnWidths,
                             }),
                           }}
                         >
-                          <div className="truncate">
+                          <div className={cn(columnWidths[cell.column.id] ? "whitespace-nowrap" : "truncate")}>
                             {flexRender(
                               cell.column.columnDef.cell,
                               cell.getContext(),
@@ -281,18 +325,22 @@ function DataTableNoData({
 export function getCommonStyles<TData>({
   column,
   isOverflowing,
+  columnWidths,
 }: {
   column: Column<TData>;
   isOverflowing: {
     horizontal: boolean;
     vertical: boolean;
   };
+  columnWidths?: Record<string, number | undefined>;
 }): React.CSSProperties {
   const isPinned = column.getIsPinned();
   const isLastLeftPinnedColumn =
     isPinned === "left" && column.getIsLastColumn("left");
   const isFirstRightPinnedColumn =
     isPinned === "right" && column.getIsFirstColumn("right");
+
+  const explicitWidth = columnWidths?.[column.id];
 
   return {
     boxShadow:
@@ -328,7 +376,8 @@ export function getCommonStyles<TData>({
       isOverflowing.horizontal && isPinned === "left"
         ? "var(--radius)"
         : undefined,
-    width: column.getSize(),
+    width: explicitWidth ?? column.getSize(),
+    whiteSpace: explicitWidth ? "nowrap" : undefined,
     zIndex: isOverflowing.horizontal && isPinned ? 1 : 0,
   };
 }

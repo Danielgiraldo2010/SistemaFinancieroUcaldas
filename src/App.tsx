@@ -19,6 +19,7 @@ import { ForgotPasswordForm } from "@/components/refine-ui/form/forgot-password-
 import { dataProvider } from "@/providers/data";
 import { authProvider } from "@/providers/auth";
 import { APP_NAME } from "@/providers/constants";
+import { getMenuIconComponent, type MenuIconName } from "@/lib/navigation-icons";
 
 import PlaceholderPage from "@/pages/placeholder";
 import { DashboardPage } from "@/pages/dashboard";
@@ -28,6 +29,10 @@ import { CdpList, CdpCreate, CdpEdit, CdpShow } from "@/pages/dbo-cdp";
 import { AlertasPresupuestalesList, AlertasPresupuestalesCreate, AlertasPresupuestalesEdit, AlertasPresupuestalesShow } from "@/pages/dbo-alertas-presupuestales";
 import { AvancesLegalizacionesList, AvancesLegalizacionesCreate, AvancesLegalizacionesEdit, AvancesLegalizacionesShow } from "@/pages/dbo-avances-legalizaciones";
 import { CierreVigenciaList, CierreVigenciaCreate, CierreVigenciaEdit, CierreVigenciaShow } from "@/pages/dbo-cierre-vigencia";
+import { EjecucionMensualList, EjecucionMensualCreate, EjecucionMensualEdit, EjecucionMensualShow } from "@/pages/dbo-ejecucion-mensual";
+import { ModificacionesDetalleList, ModificacionesDetalleCreate, ModificacionesDetalleEdit, ModificacionesDetalleShow } from "@/pages/dbo-modificaciones-detalle";
+import { FechasLimitePresupuestalesList, FechasLimitePresupuestalesCreate, FechasLimitePresupuestalesEdit, FechasLimitePresupuestalesShow } from "@/pages/dbo-fechas-limite-presupuestales";
+import { EstructurasFinancierasList, EstructurasFinancierasCreate, EstructurasFinancierasEdit, EstructurasFinancierasShow } from "@/pages/dbo-estructuras-financieras";
 import { EmpleadosList, EmpleadosCreate, EmpleadosEdit, EmpleadosShow } from "@/pages/dbo-empleados";
 import { ConceptosNominaList, ConceptosNominaCreate, ConceptosNominaEdit, ConceptosNominaShow } from "@/pages/dbo-conceptos-nomina";
 import { ProgramasAcademicosList, ProgramasAcademicosCreate, ProgramasAcademicosEdit, ProgramasAcademicosShow } from "@/pages/dbo-programas-academicos";
@@ -35,6 +40,11 @@ import { EstudiantesList, EstudiantesCreate, EstudiantesEdit, EstudiantesShow } 
 import { BecasPosgradoList, BecasPosgradoCreate, BecasPosgradoEdit, BecasPosgradoShow } from "@/pages/dbo-becas-posgrado";
 import { ApoyosMatriculaList, ApoyosMatriculaCreate, ApoyosMatriculaEdit, ApoyosMatriculaShow } from "@/pages/dbo-apoyos-matricula";
 import { ApoyoMatriculaList, ApoyoMatriculaCreate, ApoyoMatriculaEdit, ApoyoMatriculaShow } from "@/pages/dbo-apoyomatricula";
+import { DescuentosList, DescuentosCreate, DescuentosEdit, DescuentosShow } from "@/pages/dbo-descuento";
+import { DescuentoMatriculaList, DescuentoMatriculaCreate, DescuentoMatriculaEdit, DescuentoMatriculaShow } from "@/pages/dbo-descuento-matricula";
+import { FinanciacionMatriculaList, FinanciacionMatriculaCreate, FinanciacionMatriculaEdit, FinanciacionMatriculaShow } from "@/pages/dbo-financiacionmatricula";
+import { MatriculasApoyosList, MatriculasApoyosCreate, MatriculasApoyosEdit, MatriculasApoyosShow } from "@/pages/dbo-matriculas-apoyos";
+import { MatriculasProyectadasList, MatriculasProyectadasCreate, MatriculasProyectadasEdit, MatriculasProyectadasShow } from "@/pages/dbo-matriculas-proyectadas";
 import { PeriodosAcademicosList, PeriodosAcademicosCreate, PeriodosAcademicosEdit, PeriodosAcademicosShow } from "@/pages/dbo-periodos-academicos";
 import { TiposProyectoList, TiposProyectoCreate, TiposProyectoEdit, TiposProyectoShow } from "@/pages/dbo-tipos-proyecto";
 import { ProyectosEspecialesList, ProyectosEspecialesCreate, ProyectosEspecialesEdit, ProyectosEspecialesShow } from "@/pages/dbo-proyectos-especiales";
@@ -53,34 +63,14 @@ import { AdminUsersList, AdminUsersCreate, AdminUsersShow, AdminUsersAssignRoles
 import { AdminRolesList, AdminRolesCreate, AdminRolesEdit } from "@/pages/administracion/roles";
 
 import {
-  BarChart2,
-  Users,
-  GraduationCap,
-  FolderOpen,
   CalendarDays,
-  Settings2,
-  Shield,
-  FileText,
-  Bell,
-  TrendingUp,
-  LockKeyhole,
-  UserCircle,
-  BookOpen,
-  BookUser,
-  Award,
-  HandCoins,
-  Layers,
-  Briefcase,
-  Receipt,
-  CalendarCheck,
-  UserCheck,
-  Building2,
-  Landmark,
-  TrendingDown,
-  ArrowUpCircle,
-  MapPin,
   CalendarRange,
 } from "lucide-react";
+
+const resourceIcon = (name: MenuIconName) => {
+  const Icon = getMenuIconComponent(name);
+  return <Icon className="h-4 w-4" />;
+};
 
 const App = () => {
   return (
@@ -102,7 +92,7 @@ const App = () => {
             list: "/dashboard",
             meta: {
               label: "Inicio",
-              icon: <BarChart2 className="h-4 w-4" />,
+              icon: resourceIcon("home"),
             },
           },
 
@@ -111,7 +101,7 @@ const App = () => {
             name: "group-administracion",
             meta: {
               label: "Administración",
-              icon: <Shield className="h-4 w-4" />,
+              icon: resourceIcon("administracion"),
               group: true,
             },
           },
@@ -124,7 +114,7 @@ const App = () => {
             meta: {
               label: "Usuarios",
               parent: "group-administracion",
-              icon: <Users className="h-4 w-4" />,
+              icon: resourceIcon("usuarios"),
             },
           },
           {
@@ -135,7 +125,7 @@ const App = () => {
             meta: {
               label: "Roles",
               parent: "group-administracion",
-              icon: <UserCheck className="h-4 w-4" />,
+              icon: resourceIcon("roles"),
             },
           },
 
@@ -144,12 +134,12 @@ const App = () => {
             name: "group-presupuesto",
             meta: {
               label: "Presupuesto",
-              icon: <BarChart2 className="h-4 w-4" />,
+              icon: resourceIcon("presupuesto"),
               group: true,
             },
           },
           {
-            name: "dbo-cdp",
+            name: "presupuesto-cdp",
             list: "/dbo-cdp",
             create: "/dbo-cdp/create",
             edit: "/dbo-cdp/:id/edit",
@@ -157,11 +147,11 @@ const App = () => {
             meta: {
               label: "CDP",
               parent: "group-presupuesto",
-              icon: <FileText className="h-4 w-4" />,
+              icon: resourceIcon("cdp"),
             },
           },
           {
-            name: "dbo-alertas-presupuestales",
+            name: "presupuesto-alertas",
             list: "/dbo-alertas-presupuestales",
             create: "/dbo-alertas-presupuestales/create",
             edit: "/dbo-alertas-presupuestales/:id/edit",
@@ -169,11 +159,11 @@ const App = () => {
             meta: {
               label: "Alertas Presupuestales",
               parent: "group-presupuesto",
-              icon: <Bell className="h-4 w-4" />,
+              icon: resourceIcon("bell"),
             },
           },
           {
-            name: "dbo-avances-legalizaciones",
+            name: "presupuesto-avances",
             list: "/dbo-avances-legalizaciones",
             create: "/dbo-avances-legalizaciones/create",
             edit: "/dbo-avances-legalizaciones/:id/edit",
@@ -181,11 +171,11 @@ const App = () => {
             meta: {
               label: "Avances y Legalizaciones",
               parent: "group-presupuesto",
-              icon: <TrendingUp className="h-4 w-4" />,
+              icon: resourceIcon("avancesLegalizaciones"),
             },
           },
           {
-            name: "dbo-cierre-vigencia",
+            name: "presupuesto-cierre",
             list: "/dbo-cierre-vigencia",
             create: "/dbo-cierre-vigencia/create",
             edit: "/dbo-cierre-vigencia/:id/edit",
@@ -193,7 +183,55 @@ const App = () => {
             meta: {
               label: "Cierre de Vigencia",
               parent: "group-presupuesto",
-              icon: <LockKeyhole className="h-4 w-4" />,
+              icon: resourceIcon("cierreVigencia"),
+            },
+          },
+          {
+            name: "presupuesto-ejecucion",
+            list: "/presupuesto/ejecucion-mensual",
+            create: "/presupuesto/ejecucion-mensual/create",
+            edit: "/presupuesto/ejecucion-mensual/:id/edit",
+            show: "/presupuesto/ejecucion-mensual/:id",
+            meta: {
+              label: "Ejecución Presupuestal",
+              parent: "group-presupuesto",
+              icon: resourceIcon("ejecucionPresupuestal"),
+            },
+          },
+          {
+            name: "presupuesto-modificaciones",
+            list: "/presupuesto/modificaciones-detalle",
+            create: "/presupuesto/modificaciones-detalle/create",
+            edit: "/presupuesto/modificaciones-detalle/:id/edit",
+            show: "/presupuesto/modificaciones-detalle/:id",
+            meta: {
+              label: "Modificaciones Presupuestales",
+              parent: "group-presupuesto",
+              icon: resourceIcon("modificaciones"),
+            },
+          },
+          {
+            name: "presupuesto-fechas-limite",
+            list: "/presupuesto/fechas-limite-presupuestales",
+            create: "/presupuesto/fechas-limite-presupuestales/create",
+            edit: "/presupuesto/fechas-limite-presupuestales/:id/edit",
+            show: "/presupuesto/fechas-limite-presupuestales/:id",
+            meta: {
+              label: "Fechas Límite Presupuestales",
+              parent: "group-presupuesto",
+              icon: resourceIcon("calendarDays"),
+            },
+          },
+          {
+            name: "presupuesto-estructuras",
+            list: "/presupuesto/estructuras-financieras",
+            create: "/presupuesto/estructuras-financieras/create",
+            edit: "/presupuesto/estructuras-financieras/:id/edit",
+            show: "/presupuesto/estructuras-financieras/:id",
+            meta: {
+              label: "Estructuras Financieras",
+              parent: "group-presupuesto",
+              icon: resourceIcon("estructurasFinancieras"),
             },
           },
 
@@ -202,12 +240,12 @@ const App = () => {
             name: "group-nomina",
             meta: {
               label: "Nómina",
-              icon: <Users className="h-4 w-4" />,
+              icon: resourceIcon("nomina"),
               group: true,
             },
           },
           {
-            name: "dbo-empleados",
+            name: "nomina-empleados",
             list: "/dbo-empleados",
             create: "/dbo-empleados/create",
             edit: "/dbo-empleados/:id/edit",
@@ -215,11 +253,11 @@ const App = () => {
             meta: {
               label: "Empleados",
               parent: "group-nomina",
-              icon: <UserCircle className="h-4 w-4" />,
+              icon: resourceIcon("empleados"),
             },
           },
           {
-            name: "dbo-conceptos-nomina",
+            name: "nomina-conceptos",
             list: "/dbo-conceptos-nomina",
             create: "/dbo-conceptos-nomina/create",
             edit: "/dbo-conceptos-nomina/:id/edit",
@@ -227,11 +265,11 @@ const App = () => {
             meta: {
               label: "Conceptos de Nómina",
               parent: "group-nomina",
-              icon: <BookOpen className="h-4 w-4" />,
+              icon: resourceIcon("liquidacion"),
             },
           },
           {
-            name: "dbo-eventos-nomina",
+            name: "nomina-eventos",
             list: "/dbo-eventos-nomina",
             create: "/dbo-eventos-nomina/create",
             edit: "/dbo-eventos-nomina/:id/edit",
@@ -239,7 +277,7 @@ const App = () => {
             meta: {
               label: "Eventos de Nómina",
               parent: "group-nomina",
-              icon: <CalendarCheck className="h-4 w-4" />,
+              icon: resourceIcon("eventos"),
             },
           },
 
@@ -248,12 +286,12 @@ const App = () => {
             name: "group-academico",
             meta: {
               label: "Académico",
-              icon: <GraduationCap className="h-4 w-4" />,
+              icon: resourceIcon("academico"),
               group: true,
             },
           },
           {
-            name: "dbo-programas-academicos",
+            name: "academico-programas",
             list: "/dbo-programas-academicos",
             create: "/dbo-programas-academicos/create",
             edit: "/dbo-programas-academicos/:id/edit",
@@ -261,11 +299,11 @@ const App = () => {
             meta: {
               label: "Programas Académicos",
               parent: "group-academico",
-              icon: <BookUser className="h-4 w-4" />,
+              icon: resourceIcon("programas"),
             },
           },
           {
-            name: "dbo-estudiante",
+            name: "academico-estudiantes",
             list: "/dbo-estudiante",
             create: "/dbo-estudiante/create",
             edit: "/dbo-estudiante/:id/edit",
@@ -273,11 +311,11 @@ const App = () => {
             meta: {
               label: "Estudiantes",
               parent: "group-academico",
-              icon: <GraduationCap className="h-4 w-4" />,
+              icon: resourceIcon("estudiantes"),
             },
           },
           {
-            name: "dbo-becas-posgrado",
+            name: "academico-becas",
             list: "/dbo-becas-posgrado",
             create: "/dbo-becas-posgrado/create",
             edit: "/dbo-becas-posgrado/:id/edit",
@@ -285,11 +323,11 @@ const App = () => {
             meta: {
               label: "Becas Posgrado",
               parent: "group-academico",
-              icon: <Award className="h-4 w-4" />,
+              icon: resourceIcon("becas"),
             },
           },
           {
-            name: "dbo-apoyos-matricula",
+            name: "academico-apoyos",
             list: "/dbo-apoyos-matricula",
             create: "/dbo-apoyos-matricula/create",
             edit: "/dbo-apoyos-matricula/:id/edit",
@@ -297,19 +335,87 @@ const App = () => {
             meta: {
               label: "Tipos de Apoyo",
               parent: "group-academico",
-              icon: <HandCoins className="h-4 w-4" />,
+              icon: resourceIcon("apoyos"),
             },
           },
           {
-            name: "dbo-apoyomatricula",
-            list: "/dbo-apoyomatricula",
-            create: "/dbo-apoyomatricula/create",
-            edit: "/dbo-apoyomatricula/:id/edit",
-            show: "/dbo-apoyomatricula/:id",
+            name: "group-matriculas",
             meta: {
-              label: "Apoyos de Matrícula",
-              parent: "group-academico",
-              icon: <HandCoins className="h-4 w-4" />,
+              label: "Matrículas",
+              icon: resourceIcon("matriculas"),
+              group: true,
+            },
+          },
+          {
+            name: "matricula-apoyos",
+            list: "/matriculas/apoyos-matricula",
+            create: "/matriculas/apoyos-matricula/create",
+            edit: "/matriculas/apoyos-matricula/:id/edit",
+            show: "/matriculas/apoyos-matricula/:id",
+            meta: {
+              label: "Apoyos Matrícula",
+              parent: "group-matriculas",
+              icon: resourceIcon("apoyos"),
+            },
+          },
+          {
+            name: "matricula-descuentos",
+            list: "/matriculas/descuentos",
+            create: "/matriculas/descuentos/create",
+            edit: "/matriculas/descuentos/:id/edit",
+            show: "/matriculas/descuentos/:id",
+            meta: {
+              label: "Descuentos",
+              parent: "group-matriculas",
+              icon: resourceIcon("descuentos"),
+            },
+          },
+          {
+            name: "matricula-descuento-especial",
+            list: "/matriculas/descuento-matricula",
+            create: "/matriculas/descuento-matricula/create",
+            edit: "/matriculas/descuento-matricula/:id/edit",
+            show: "/matriculas/descuento-matricula/:id",
+            meta: {
+              label: "Descuento Matrícula",
+              parent: "group-matriculas",
+              icon: resourceIcon("descuentos"),
+            },
+          },
+          {
+            name: "matricula-financiacion",
+            list: "/matriculas/financiacion-matricula",
+            create: "/matriculas/financiacion-matricula/create",
+            edit: "/matriculas/financiacion-matricula/:id/edit",
+            show: "/matriculas/financiacion-matricula/:id",
+            meta: {
+              label: "Financiación Matrícula",
+              parent: "group-matriculas",
+              icon: resourceIcon("financiacion"),
+            },
+          },
+          {
+            name: "matricula-asignaciones",
+            list: "/matriculas/apoyos",
+            create: "/matriculas/apoyos/create",
+            edit: "/matriculas/apoyos/:id/edit",
+            show: "/matriculas/apoyos/:id",
+            meta: {
+              label: "Asignación de Apoyos",
+              parent: "group-matriculas",
+              icon: resourceIcon("apoyos"),
+            },
+          },
+          {
+            name: "matricula-proyectadas",
+            list: "/matriculas/proyectadas",
+            create: "/matriculas/proyectadas/create",
+            edit: "/matriculas/proyectadas/:id/edit",
+            show: "/matriculas/proyectadas/:id",
+            meta: {
+              label: "Matrículas Proyectadas",
+              parent: "group-matriculas",
+              icon: resourceIcon("calendarRange"),
             },
           },
 
@@ -318,12 +424,12 @@ const App = () => {
             name: "group-proyectos",
             meta: {
               label: "Proyectos",
-              icon: <FolderOpen className="h-4 w-4" />,
+              icon: resourceIcon("proyectos"),
               group: true,
             },
           },
           {
-            name: "dbo-tipos-proyecto",
+            name: "proyecto-tipos",
             list: "/dbo-tipos-proyecto",
             create: "/dbo-tipos-proyecto/create",
             edit: "/dbo-tipos-proyecto/:id/edit",
@@ -331,11 +437,11 @@ const App = () => {
             meta: {
               label: "Tipos de Proyecto",
               parent: "group-proyectos",
-              icon: <Layers className="h-4 w-4" />,
+              icon: resourceIcon("tiposProyecto"),
             },
           },
           {
-            name: "dbo-proyectos-especiales",
+            name: "proyecto-especiales",
             list: "/dbo-proyectos-especiales",
             create: "/dbo-proyectos-especiales/create",
             edit: "/dbo-proyectos-especiales/:id/edit",
@@ -343,11 +449,11 @@ const App = () => {
             meta: {
               label: "Proyectos Especiales",
               parent: "group-proyectos",
-              icon: <Briefcase className="h-4 w-4" />,
+              icon: resourceIcon("proyectos"),
             },
           },
           {
-            name: "dbo-cartera-facturas",
+            name: "cartera-facturas",
             list: "/dbo-cartera-facturas",
             create: "/dbo-cartera-facturas/create",
             edit: "/dbo-cartera-facturas/:id/edit",
@@ -355,19 +461,19 @@ const App = () => {
             meta: {
               label: "Cartera de Facturas",
               parent: "group-proyectos",
-              icon: <Receipt className="h-4 w-4" />,
+              icon: resourceIcon("carteraFacturas"),
             },
           },
           {
             name: "group-contratacion",
             meta: {
               label: "Contratación",
-              icon: <Briefcase className="h-4 w-4" />,
+              icon: resourceIcon("contratos"),
               group: true,
             },
           },
           {
-            name: "dbo-contratos",
+            name: "contratacion-contratos",
             list: "/dbo-contratos",
             create: "/dbo-contratos/create",
             edit: "/dbo-contratos/:id/edit",
@@ -375,11 +481,11 @@ const App = () => {
             meta: {
               label: "Contratos",
               parent: "group-contratacion",
-              icon: <Briefcase className="h-4 w-4" />,
+              icon: resourceIcon("contratos"),
             },
           },
           {
-            name: "dbo-pagos-contratos",
+            name: "contratacion-pagos",
             list: "/dbo-pagos-contratos",
             create: "/dbo-pagos-contratos/create",
             edit: "/dbo-pagos-contratos/:id/edit",
@@ -387,7 +493,7 @@ const App = () => {
             meta: {
               label: "Pagos de Contratos",
               parent: "group-contratacion",
-              icon: <Receipt className="h-4 w-4" />,
+              icon: resourceIcon("pagos"),
             },
           },
 
@@ -396,12 +502,12 @@ const App = () => {
             name: "group-agenda",
             meta: {
               label: "Agenda",
-              icon: <CalendarDays className="h-4 w-4" />,
+              icon: resourceIcon("agenda"),
               group: true,
             },
           },
           {
-            name: "dbo-agenda-eventos",
+            name: "agenda-eventos",
             list: "/dbo-agenda-eventos",
             create: "/dbo-agenda-eventos/create",
             edit: "/dbo-agenda-eventos/:id/edit",
@@ -409,11 +515,11 @@ const App = () => {
             meta: {
               label: "Eventos",
               parent: "group-agenda",
-              icon: <CalendarCheck className="h-4 w-4" />,
+              icon: resourceIcon("eventos"),
             },
           },
           {
-            name: "dbo-agenda-asignaciones",
+            name: "agenda-asignaciones",
             list: "/dbo-agenda-asignaciones",
             create: "/dbo-agenda-asignaciones/create",
             edit: "/dbo-agenda-asignaciones/:id/edit",
@@ -421,11 +527,11 @@ const App = () => {
             meta: {
               label: "Asignaciones",
               parent: "group-agenda",
-              icon: <UserCheck className="h-4 w-4" />,
+              icon: resourceIcon("asignaciones"),
             },
           },
           {
-            name: "dbo-eventos-seguimiento",
+            name: "agenda-seguimiento",
             list: "/dbo-eventos-seguimiento",
             create: "/dbo-eventos-seguimiento/create",
             edit: "/dbo-eventos-seguimiento/:id/edit",
@@ -433,7 +539,7 @@ const App = () => {
             meta: {
               label: "Eventos de Seguimiento",
               parent: "group-agenda",
-              icon: <CalendarRange className="h-4 w-4" />,
+              icon: resourceIcon("seguimiento"),
             },
           },
 
@@ -442,12 +548,12 @@ const App = () => {
             name: "group-configuracion",
             meta: {
               label: "Configuración",
-              icon: <Settings2 className="h-4 w-4" />,
+              icon: resourceIcon("configuracion"),
               group: true,
             },
           },
           {
-            name: "dbo-unidades-ejecutoras",
+            name: "configuracion-unidades",
             list: "/dbo-unidades-ejecutoras",
             create: "/dbo-unidades-ejecutoras/create",
             edit: "/dbo-unidades-ejecutoras/:id/edit",
@@ -455,11 +561,11 @@ const App = () => {
             meta: {
               label: "Unidades Ejecutoras",
               parent: "group-configuracion",
-              icon: <Building2 className="h-4 w-4" />,
+              icon: resourceIcon("unidades"),
             },
           },
           {
-            name: "dbo-fuentes-recursos",
+            name: "configuracion-fuentes",
             list: "/dbo-fuentes-recursos",
             create: "/dbo-fuentes-recursos/create",
             edit: "/dbo-fuentes-recursos/:id/edit",
@@ -467,11 +573,11 @@ const App = () => {
             meta: {
               label: "Fuentes de Recursos",
               parent: "group-configuracion",
-              icon: <Landmark className="h-4 w-4" />,
+              icon: resourceIcon("fuentes"),
             },
           },
           {
-            name: "dbo-rubros-gasto",
+            name: "configuracion-rubros-gasto",
             list: "/dbo-rubros-gasto",
             create: "/dbo-rubros-gasto/create",
             edit: "/dbo-rubros-gasto/:id/edit",
@@ -479,11 +585,11 @@ const App = () => {
             meta: {
               label: "Rubros de Gasto",
               parent: "group-configuracion",
-              icon: <TrendingDown className="h-4 w-4" />,
+              icon: resourceIcon("rubros"),
             },
           },
           {
-            name: "dbo-rubros-ingreso",
+            name: "configuracion-rubros-ingreso",
             list: "/dbo-rubros-ingreso",
             create: "/dbo-rubros-ingreso/create",
             edit: "/dbo-rubros-ingreso/:id/edit",
@@ -491,11 +597,11 @@ const App = () => {
             meta: {
               label: "Rubros de Ingreso",
               parent: "group-configuracion",
-              icon: <ArrowUpCircle className="h-4 w-4" />,
+              icon: resourceIcon("rubros"),
             },
           },
           {
-            name: "dbo-municipio",
+            name: "configuracion-municipios",
             list: "/dbo-municipio",
             create: "/dbo-municipio/create",
             edit: "/dbo-municipio/:id/edit",
@@ -503,11 +609,11 @@ const App = () => {
             meta: {
               label: "Municipios",
               parent: "group-configuracion",
-              icon: <MapPin className="h-4 w-4" />,
+              icon: resourceIcon("municipio"),
             },
           },
           {
-            name: "dbo-periodos-academicos",
+            name: "academico-periodos",
             list: "/dbo-periodos-academicos",
             create: "/dbo-periodos-academicos/create",
             edit: "/dbo-periodos-academicos/:id/edit",
@@ -515,7 +621,27 @@ const App = () => {
             meta: {
               label: "Períodos Académicos",
               parent: "group-academico",
-              icon: <CalendarRange className="h-4 w-4" />,
+              icon: resourceIcon("calendarRange"),
+            },
+          },
+          {
+            name: "group-reportes",
+            meta: {
+              label: "Reportes",
+              icon: resourceIcon("reportes"),
+              group: true,
+            },
+          },
+          {
+            name: "reportes",
+            list: "/reportes",
+            create: "/reportes",
+            edit: "/reportes",
+            show: "/reportes",
+            meta: {
+              label: "Reportes",
+              parent: "group-reportes",
+              icon: resourceIcon("reportes"),
             },
           },
         ]}>
@@ -574,6 +700,22 @@ const App = () => {
             <Route path="/dbo-cierre-vigencia/create" element={<CierreVigenciaCreate />} />
             <Route path="/dbo-cierre-vigencia/:id/edit" element={<CierreVigenciaEdit />} />
             <Route path="/dbo-cierre-vigencia/:id" element={<CierreVigenciaShow />} />
+            <Route path="/presupuesto/ejecucion-mensual" element={<EjecucionMensualList />} />
+            <Route path="/presupuesto/ejecucion-mensual/create" element={<EjecucionMensualCreate />} />
+            <Route path="/presupuesto/ejecucion-mensual/:id/edit" element={<EjecucionMensualEdit />} />
+            <Route path="/presupuesto/ejecucion-mensual/:id" element={<EjecucionMensualShow />} />
+            <Route path="/presupuesto/modificaciones-detalle" element={<ModificacionesDetalleList />} />
+            <Route path="/presupuesto/modificaciones-detalle/create" element={<ModificacionesDetalleCreate />} />
+            <Route path="/presupuesto/modificaciones-detalle/:id/edit" element={<ModificacionesDetalleEdit />} />
+            <Route path="/presupuesto/modificaciones-detalle/:id" element={<ModificacionesDetalleShow />} />
+            <Route path="/presupuesto/fechas-limite-presupuestales" element={<FechasLimitePresupuestalesList />} />
+            <Route path="/presupuesto/fechas-limite-presupuestales/create" element={<FechasLimitePresupuestalesCreate />} />
+            <Route path="/presupuesto/fechas-limite-presupuestales/:id/edit" element={<FechasLimitePresupuestalesEdit />} />
+            <Route path="/presupuesto/fechas-limite-presupuestales/:id" element={<FechasLimitePresupuestalesShow />} />
+            <Route path="/presupuesto/estructuras-financieras" element={<EstructurasFinancierasList />} />
+            <Route path="/presupuesto/estructuras-financieras/create" element={<EstructurasFinancierasCreate />} />
+            <Route path="/presupuesto/estructuras-financieras/:id/edit" element={<EstructurasFinancierasEdit />} />
+            <Route path="/presupuesto/estructuras-financieras/:id" element={<EstructurasFinancierasShow />} />
 
             {/* Nómina */}
             <Route path="/dbo-empleados" element={<EmpleadosList />} />
@@ -602,15 +744,30 @@ const App = () => {
             <Route path="/dbo-becas-posgrado/:id/edit" element={<BecasPosgradoEdit />} />
             <Route path="/dbo-becas-posgrado/:id" element={<BecasPosgradoShow />} />
 
-            <Route path="/dbo-apoyos-matricula" element={<ApoyosMatriculaList />} />
-            <Route path="/dbo-apoyos-matricula/create" element={<ApoyosMatriculaCreate />} />
-            <Route path="/dbo-apoyos-matricula/:id/edit" element={<ApoyosMatriculaEdit />} />
-            <Route path="/dbo-apoyos-matricula/:id" element={<ApoyosMatriculaShow />} />
-
-            <Route path="/dbo-apoyomatricula" element={<ApoyoMatriculaList />} />
-            <Route path="/dbo-apoyomatricula/create" element={<ApoyoMatriculaCreate />} />
-            <Route path="/dbo-apoyomatricula/:id/edit" element={<ApoyoMatriculaEdit />} />
-            <Route path="/dbo-apoyomatricula/:id" element={<ApoyoMatriculaShow />} />
+            <Route path="/matriculas/apoyos-matricula" element={<ApoyosMatriculaList />} />
+            <Route path="/matriculas/apoyos-matricula/create" element={<ApoyosMatriculaCreate />} />
+            <Route path="/matriculas/apoyos-matricula/:id/edit" element={<ApoyosMatriculaEdit />} />
+            <Route path="/matriculas/apoyos-matricula/:id" element={<ApoyosMatriculaShow />} />
+            <Route path="/matriculas/descuentos" element={<DescuentosList />} />
+            <Route path="/matriculas/descuentos/create" element={<DescuentosCreate />} />
+            <Route path="/matriculas/descuentos/:id/edit" element={<DescuentosEdit />} />
+            <Route path="/matriculas/descuentos/:id" element={<DescuentosShow />} />
+            <Route path="/matriculas/descuento-matricula" element={<DescuentoMatriculaList />} />
+            <Route path="/matriculas/descuento-matricula/create" element={<DescuentoMatriculaCreate />} />
+            <Route path="/matriculas/descuento-matricula/:id/edit" element={<DescuentoMatriculaEdit />} />
+            <Route path="/matriculas/descuento-matricula/:id" element={<DescuentoMatriculaShow />} />
+            <Route path="/matriculas/financiacion-matricula" element={<FinanciacionMatriculaList />} />
+            <Route path="/matriculas/financiacion-matricula/create" element={<FinanciacionMatriculaCreate />} />
+            <Route path="/matriculas/financiacion-matricula/:id/edit" element={<FinanciacionMatriculaEdit />} />
+            <Route path="/matriculas/financiacion-matricula/:id" element={<FinanciacionMatriculaShow />} />
+            <Route path="/matriculas/apoyos" element={<MatriculasApoyosList />} />
+            <Route path="/matriculas/apoyos/create" element={<MatriculasApoyosCreate />} />
+            <Route path="/matriculas/apoyos/:id/edit" element={<MatriculasApoyosEdit />} />
+            <Route path="/matriculas/apoyos/:id" element={<MatriculasApoyosShow />} />
+            <Route path="/matriculas/proyectadas" element={<MatriculasProyectadasList />} />
+            <Route path="/matriculas/proyectadas/create" element={<MatriculasProyectadasCreate />} />
+            <Route path="/matriculas/proyectadas/:id/edit" element={<MatriculasProyectadasEdit />} />
+            <Route path="/matriculas/proyectadas/:id" element={<MatriculasProyectadasShow />} />
 
             {/* Proyectos */}
             <Route path="/dbo-tipos-proyecto" element={<TiposProyectoList />} />
@@ -673,6 +830,8 @@ const App = () => {
             <Route path="/dbo-periodos-academicos/create" element={<PeriodosAcademicosCreate />} />
             <Route path="/dbo-periodos-academicos/:id/edit" element={<PeriodosAcademicosEdit />} />
             <Route path="/dbo-periodos-academicos/:id" element={<PeriodosAcademicosShow />} />
+
+            <Route path="/reportes" element={<PlaceholderPage />} />
 
             <Route path="/dbo-contratos" element={<ContratosList />} />
             <Route path="/dbo-contratos/create" element={<ContratosCreate />} />

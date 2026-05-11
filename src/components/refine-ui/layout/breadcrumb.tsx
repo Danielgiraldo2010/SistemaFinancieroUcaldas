@@ -1,81 +1,63 @@
-"use client"
+"use client";
 
-import { Fragment, useMemo } from "react"
-import { Home } from "lucide-react"
+import { Fragment } from "react";
+import { Home } from "lucide-react";
+import { useLink } from "@refinedev/core";
+import { useLocation } from "react-router";
 import {
-  matchResourceFromRoute,
-  useBreadcrumb,
-  useLink,
-  useResourceParams,
-} from "@refinedev/core"
-import {
-  BreadcrumbSeparator as ShadcnBreadcrumbSeparator,
+  Breadcrumb as ShadcnBreadcrumb,
   BreadcrumbItem as ShadcnBreadcrumbItem,
   BreadcrumbList as ShadcnBreadcrumbList,
   BreadcrumbPage as ShadcnBreadcrumbPage,
-  Breadcrumb as ShadcnBreadcrumb,
-} from "@/components/ui/breadcrumb"
+  BreadcrumbSeparator as ShadcnBreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { resolveBreadcrumb } from "@/lib/navigation";
+import { getMenuIconComponent } from "@/lib/navigation-icons";
 
 export function Breadcrumb() {
-  const Link = useLink()
-  const { breadcrumbs } = useBreadcrumb()
-  const { resources } = useResourceParams()
-  const rootRouteResource = matchResourceFromRoute("/", resources)
-
-  const breadCrumbItems = useMemo(() => {
-    const list: {
-      key: string
-      href: string
-      Component: React.ReactNode
-    }[] = []
-
-    list.push({
-      key: "breadcrumb-item-home",
-      href: rootRouteResource.matchedRoute ?? "/",
-      Component: (
-        <Link to={rootRouteResource.matchedRoute ?? "/"}>
-          {rootRouteResource?.resource?.meta?.icon ?? (
-            <Home className="h-4 w-4" />
-          )}
-        </Link>
-      ),
-    })
-
-    for (const { label, href } of breadcrumbs) {
-      list.push({
-        key: `breadcrumb-item-${label}`,
-        href: href ?? "",
-        Component: href ? <Link to={href}>{label}</Link> : <span>{label}</span>,
-      })
-    }
-
-    return list
-  }, [breadcrumbs, Link, rootRouteResource])
+  const Link = useLink();
+  const { pathname } = useLocation();
+  const crumbs = resolveBreadcrumb(pathname);
 
   return (
     <ShadcnBreadcrumb>
       <ShadcnBreadcrumbList>
-        {breadCrumbItems.map((item, index) => {
-          if (index === breadCrumbItems.length - 1) {
-            return (
-              <ShadcnBreadcrumbPage key={item.key}>
-                {item.Component}
-              </ShadcnBreadcrumbPage>
-            )
-          }
+        {crumbs.map((item, index) => {
+          const isLast = index === crumbs.length - 1;
+          const href = item.href || "/dashboard";
+          const IconComponent = item.iconName ? getMenuIconComponent(item.iconName) : null;
+          const content = index === 0 ? (
+            <Link to={href}>
+              <Home className="h-4 w-4" />
+            </Link>
+          ) : item.href ? (
+            <Link to={href} className="inline-flex items-center gap-1.5">
+              {IconComponent ? <IconComponent className="h-3.5 w-3.5" /> : null}
+              <span>{item.label}</span>
+            </Link>
+          ) : (
+            <span className="inline-flex items-center gap-1.5">
+              {IconComponent ? <IconComponent className="h-3.5 w-3.5" /> : null}
+              <span>{item.label}</span>
+            </span>
+          );
 
           return (
-            <Fragment key={item.key}>
-              <ShadcnBreadcrumbItem key={item.key}>
-                {item.Component}
-              </ShadcnBreadcrumbItem>
-              <ShadcnBreadcrumbSeparator />
+            <Fragment key={`${item.label}-${index}`}>
+              {isLast ? (
+                <ShadcnBreadcrumbPage>{content}</ShadcnBreadcrumbPage>
+              ) : (
+                <>
+                  <ShadcnBreadcrumbItem>{content}</ShadcnBreadcrumbItem>
+                  <ShadcnBreadcrumbSeparator />
+                </>
+              )}
             </Fragment>
-          )
+          );
         })}
       </ShadcnBreadcrumbList>
     </ShadcnBreadcrumb>
-  )
+  );
 }
 
-Breadcrumb.displayName = "Breadcrumb"
+Breadcrumb.displayName = "Breadcrumb";

@@ -144,6 +144,22 @@ function normalizeDisplayValue(field: CrudField, value: unknown, record: Record<
     const text = typeof value === "string" ? new Date(value).toLocaleString("es-CO") : String(value);
     return <span>{text}</span>;
   }
+  if (field.type === "select") {
+    // If the API returned the related object (e.g. unidadEjecutora: { nombre }), prefer showing its label
+    const baseKey = field.key.replace(/Id$/i, "");
+    const resourceKey = field.optionResource ? field.optionResource.replace(/[^a-z0-9]/gi, "") : undefined;
+    const related = record[baseKey] ?? record[baseKey + "s"] ?? (resourceKey ? record[resourceKey] : undefined);
+    const labelKey = field.optionLabelKey ?? "nombre";
+    if (related && typeof related === "object") {
+      const candidate = related[labelKey] ?? related.fullName ?? related.titulo ?? related.codigo ?? related.numero;
+      if (candidate) return <span>{String(candidate)}</span>;
+    }
+
+    // If we only have the id (value), try to fetch the related record to show its label
+    if (!related && !isNil(value) && field.optionResource) {
+      return <RelatedLabel resource={field.optionResource} id={value} labelKey={labelKey} fallback={String(value)} />;
+    }
+  }
   if (isNil(value) || value === "") return <span className="text-muted-foreground">—</span>;
   return <span>{String(value)}</span>;
 }
@@ -242,6 +258,18 @@ function buildPayload(fields: CrudField[], values: Record<string, any>) {
   return payload;
 }
 
+function getDefaultColumnWidth(field: CrudField): number {
+  if (field.type === "boolean") return 100;
+  if (field.type === "datetime" || field.type === "date") return 160;
+  if (field.type === "number") return 120;
+  if (field.type === "textarea") return 220;
+  // text fields: longer labels get more space
+  const labelLen = field.label.length;
+  if (labelLen > 20) return 260;
+  if (labelLen > 12) return 200;
+  return 150;
+}
+
 export function createCrudPages(config: CrudResourceConfig) {
   const formFields = config.formFields ?? config.fields;
   const schema = buildSchema(formFields);
@@ -260,7 +288,7 @@ export function createCrudPages(config: CrudResourceConfig) {
             id: field.key,
             accessorKey: field.key,
             header: ({ column }: any) => <DataTableSorter column={column} title={field.label} />,
-            size: field.listWidth ?? 180,
+            size: field.listWidth ?? getDefaultColumnWidth(field),
             cell: ({ getValue, row }: any) => normalizeDisplayValue(field, getValue(), row.original),
           })),
           {
@@ -530,4 +558,31 @@ export function createCrudPages(config: CrudResourceConfig) {
     EditPage: () => <CrudFormPage isEdit={true} />,
     ShowPage: CrudShowPage,
   };
+}
+
+function RelatedLabel({
+  resource,
+  id,
+  labelKey = "nombre",
+  fallback,
+}: {
+  resource?: string;
+  id: unknown;
+  labelKey?: string;
+  fallback?: string;
+}) {
+  if (!resource || isNil(id) || String(id) === "") return <span className="text-muted-foreground">—</span>;
+
+  const { query, result } = useOne<Record<string, any>>({
+    resource,
+    id: String(id),
+    queryOptions: { enabled: true },
+  });
+
+  const record = result ?? query.data?.data ?? null;
+  const candidate = record ? record[labelKey] ?? record.fullName ?? record.titulo ?? record.codigo ?? record.numero : null;
+
+  if (candidate) return <span>{String(candidate)}</span>;
+  if (query.isLoading) return <span className="text-muted-foreground">Cargando…</span>;
+  return <span>{fallback ?? String(id)}</span>;
 }

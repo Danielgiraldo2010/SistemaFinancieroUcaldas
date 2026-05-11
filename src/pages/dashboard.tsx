@@ -11,13 +11,14 @@ import {
   ComposedChart,
   Pie,
   PieChart,
-  ResponsiveContainer,
+  // ResponsiveContainer removed from here; using SafeResponsiveContainer below
   Tooltip,
   XAxis,
   YAxis,
   CartesianGrid,
   Legend,
 } from "recharts";
+import SafeResponsiveContainer from "@/components/ui/SafeResponsiveContainer";
 import {
   BadgeDollarSign,
   CalendarDays,
@@ -303,7 +304,7 @@ export function DashboardPage() {
       <section className="grid gap-5">
         <SectionCard title="Ejecución presupuestal mensual">
           <div className="h-[320px]">
-            <ResponsiveContainer width="100%" height="100%">
+            <SafeResponsiveContainer width="100%" height="100%">
               <AreaChart data={monthlyData}>
                 <defs>
                   <linearGradient id="ejecutadoFill" x1="0" y1="0" x2="0" y2="1">
@@ -319,7 +320,7 @@ export function DashboardPage() {
                 <Area type="monotone" dataKey="ejecutado" stroke="#00284d" fill="url(#ejecutadoFill)" strokeWidth={2} />
                 <Area type="monotone" dataKey="disponible" stroke="#d5bb87" fill="rgba(213,187,135,0.2)" strokeWidth={2} />
               </AreaChart>
-            </ResponsiveContainer>
+            </SafeResponsiveContainer>
           </div>
         </SectionCard>
 
@@ -327,7 +328,7 @@ export function DashboardPage() {
           <SectionCard title="Presupuesto ejecutado vs disponible">
             {pieData.some((item) => item.value > 0) ? (
               <div className="h-[320px]">
-                <ResponsiveContainer width="100%" height="100%">
+                <SafeResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie data={pieData} innerRadius={82} outerRadius={120} paddingAngle={5} dataKey="value" nameKey="name">
                       {pieData.map((entry, index) => (
@@ -337,7 +338,7 @@ export function DashboardPage() {
                     <Tooltip formatter={(value: any) => formatMoney(Number(value))} />
                     <Legend />
                   </PieChart>
-                </ResponsiveContainer>
+                </SafeResponsiveContainer>
               </div>
             ) : (
               <EmptyState text="Sin datos suficientes para el gráfico." />
@@ -347,7 +348,7 @@ export function DashboardPage() {
           <SectionCard title="Distribución por rubros">
             <div className="h-[320px]">
               {cdpByRubros.length ? (
-                <ResponsiveContainer width="100%" height="100%">
+                <SafeResponsiveContainer width="100%" height="100%">
                   <BarChart data={cdpByRubros} layout="vertical" margin={{ top: 8, right: 24, left: 16, bottom: 8 }}>
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} />
                     <XAxis type="number" hide />
@@ -362,7 +363,7 @@ export function DashboardPage() {
                       ))}
                     </Bar>
                   </BarChart>
-                </ResponsiveContainer>
+                </SafeResponsiveContainer>
               ) : (
                 <EmptyState text="Sin rubros suficientes para mostrar la distribución." />
               )}
@@ -392,7 +393,7 @@ export function DashboardPage() {
 
           <SectionCard title="Comparación entre vigencias">
             <div className="h-[320px]">
-              <ResponsiveContainer width="100%" height="100%">
+              <SafeResponsiveContainer width="100%" height="100%">
                 <ComposedChart data={vigenciasData}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
                   <XAxis dataKey="vigencia" tickLine={false} axisLine={false} />
@@ -402,7 +403,7 @@ export function DashboardPage() {
                   <Bar dataKey="comprometido" fill="#00284d" radius={[8, 8, 0, 0]} />
                   <Bar dataKey="pagado" fill="#d5bb87" radius={[8, 8, 0, 0]} />
                 </ComposedChart>
-              </ResponsiveContainer>
+              </SafeResponsiveContainer>
             </div>
             <div className="mt-4 grid gap-2 sm:grid-cols-3">
               {gastosPorUnidad.map((unit, index) => (
