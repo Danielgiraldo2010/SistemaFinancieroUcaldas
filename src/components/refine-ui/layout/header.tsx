@@ -16,30 +16,32 @@ import {
 import { ThemeToggle } from "@/components/refine-ui/theme/theme-toggle";
 import { UserAvatar } from "@/components/refine-ui/layout/user-avatar";
 import { Breadcrumb } from "@/components/refine-ui/layout/breadcrumb";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useLayout } from "@/lib/layout-context";
 import { ChevronDown, LogOutIcon, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Header = () => {
   const { sidebarExpanded, submenuOpen } = useLayout();
+  const isMobile = useIsMobile();
   
   // Calcular offsets dinámicos
   const sidebarWidth = sidebarExpanded ? 288 : 64; // w-72: 18rem=288px, w-16: 64px
   const submenuWidth = submenuOpen ? 284 : 0; // submenu visible solo si está abierto
-  const totalLeftOffset = sidebarWidth + submenuWidth;
+  const totalLeftOffset = isMobile ? 0 : sidebarWidth + submenuWidth;
 
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 flex h-16 items-center justify-between border-b border-[#efd9af]/20 bg-[#003e70] px-4",
+        "sticky top-0 z-40 flex h-16 items-center justify-between border-b border-[#efd9af]/20 bg-[#003e70] px-3 sm:px-4",
         "shadow-[0_6px_18px_rgba(0,40,77,0.14)]",
         "transition-[margin-left] duration-300 ease-out",
       )}
       style={{
-        marginLeft: `${totalLeftOffset}px`,
+        marginLeft: isMobile ? 0 : `${totalLeftOffset}px`,
       }}
     >
-      <div className="min-w-0 flex-1 pr-4">
+      <div className="min-w-0 flex-1 pr-4 hidden md:block">
         <div
           className={cn(
             "[&_ol]:gap-2",
@@ -56,7 +58,7 @@ export const Header = () => {
         </div>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3">
         <ThemeToggle />
         <UserDropdown />
       </div>
@@ -95,7 +97,7 @@ const UserDropdown = () => {
         <button
           type="button"
           className={cn(
-            "flex h-11 items-center gap-3 rounded-full border border-[#efd9af]/24 bg-white/10 py-1 pl-1 pr-3 text-left text-white shadow-sm backdrop-blur-sm transition-all hover:bg-white/15 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d5bb87]/70",
+            "flex h-11 items-center gap-2 rounded-full border border-[#efd9af]/24 bg-white/10 py-1 pl-1 pr-2 sm:pr-3 text-left text-white shadow-sm backdrop-blur-sm transition-all hover:bg-white/15 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d5bb87]/70",
           )}
         >
           <UserAvatar />

@@ -5,17 +5,19 @@ import { useLocation } from "react-router";
 import { Sidebar } from "@/components/refine-ui/layout/sidebar";
 import { Header } from "@/components/refine-ui/layout/header";
 import { ThemeProvider } from "@/components/refine-ui/theme/theme-provider";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { LayoutProvider, useLayout } from "@/lib/layout-context";
 import { cn } from "@/lib/utils";
 
 function LayoutContent({ children }: PropsWithChildren) {
   const { pathname } = useLocation();
   const { sidebarExpanded, submenuOpen } = useLayout();
+  const isMobile = useIsMobile();
   
   // Calcular offsets dinámicos basados en estado real
   const sidebarWidth = sidebarExpanded ? 288 : 64; // w-72: 18rem=288px, w-16: 64px
   const submenuWidth = submenuOpen ? 284 : 0; // submenu visible solo si está abierto
-  const totalLeftOffset = sidebarWidth + submenuWidth;
+  const totalLeftOffset = isMobile ? 0 : sidebarWidth + submenuWidth;
 
   return (
     <div
@@ -35,13 +37,14 @@ function LayoutContent({ children }: PropsWithChildren) {
           "relative",
           "min-h-[calc(100vh-4rem)]",
           "transition-all duration-300 ease-out",
-          "px-4 py-4 md:px-6 md:py-6 lg:px-8",
+          "px-3 py-4 md:px-6 md:py-6 lg:px-8",
+          isMobile && "pl-16",
         )}
         style={{
-          marginLeft: `var(--total-left-offset)`,
+          marginLeft: isMobile ? 0 : `var(--total-left-offset)`,
         }}
       >
-        <div className="mx-auto w-full max-w-[1600px] flex-col">
+        <div className="mx-auto flex w-full max-w-[1600px] flex-col">
           {children}
         </div>
       </main>
