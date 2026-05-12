@@ -155,17 +155,10 @@ export function DataTable<TData extends BaseRecord>({
                     >
                       {isPlaceholder ? null : (
                         <div className={cn("flex", "items-center", "gap-1")}>
-                          <button
-                            type="button"
-                            onClick={(e) => toggleTitleSize(header.column.id, e.currentTarget as HTMLElement)}
-                            className="flex items-center gap-1"
-                            title={columnWidths[header.column.id] ? "Restaurar ancho" : "Ajustar al título"}
-                          >
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
-                          </button>
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
                         </div>
                       )}
                     </TableHead>
