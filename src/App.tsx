@@ -22,6 +22,7 @@ import { APP_NAME } from "@/providers/constants";
 import { getMenuIconComponent, type MenuIconName } from "@/lib/navigation-icons";
 
 import PlaceholderPage from "@/pages/placeholder";
+import ReportesPage from "@/pages/reportes";
 import { DashboardPage } from "@/pages/dashboard";
 import UnidadesEjectorasList from "@/pages/dbo-unidades-ejecutoras/list";
 import { UnidadesEjectorasCreate, UnidadesEjectorasEdit } from "@/pages/dbo-unidades-ejecutoras/form";
@@ -831,7 +832,7 @@ const App = () => {
             <Route path="/dbo-periodos-academicos/:id/edit" element={<PeriodosAcademicosEdit />} />
             <Route path="/dbo-periodos-academicos/:id" element={<PeriodosAcademicosShow />} />
 
-            <Route path="/reportes" element={<PlaceholderPage />} />
+            <Route path="/reportes" element={<ReportesPage />} />
 
             <Route path="/dbo-contratos" element={<ContratosList />} />
             <Route path="/dbo-contratos/create" element={<ContratosCreate />} />

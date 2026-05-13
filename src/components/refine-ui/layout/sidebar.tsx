@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useLocation, useNavigate } from "react-router";
-import { ChevronRight, Search, X } from "lucide-react";
+import { ChevronRight, X } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -67,7 +67,6 @@ export function Sidebar() {
   }, [pathname]);
 
   const activeDomainKey = resolveDomainFromPathname(pathname);
-  const activeItem = resolveActiveItemFromPathname(pathname);
   const activeDomain = NAV_DOMAINS.find((domain) => domain.key === activeDomainKey) ?? NAV_DOMAINS[0];
   const isDashboard = activeDomainKey === "dashboard";
 
@@ -209,13 +208,20 @@ export function Sidebar() {
       <div className="md:hidden">
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetTrigger asChild>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="fixed left-3 top-3 z-50 rounded-full bg-[#003e70] text-white shadow-lg"
-              title="Abrir menú"
+            <Button
+              variant="ghost"
+              className={cn(
+                "fixed left-3 top-3 z-50 h-12 rounded-full border border-white/10 bg-[#003e70] px-3 text-white shadow-lg backdrop-blur-md",
+                "flex items-center gap-2",
+              )}
+              title={`Abrir ${getDomainLabel(activeDomain)}`}
             >
-              <Search className="h-5 w-5" />
+              <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-white/10">
+                <MenuIcon iconName={activeDomain.iconName} className="h-4 w-4" />
+              </span>
+              <span className="max-w-[140px] truncate text-left text-sm font-semibold">
+                {getDomainLabel(activeDomain)}
+              </span>
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="w-[320px] border-[#efd9af]/20 bg-[#00284d] p-0 text-white">

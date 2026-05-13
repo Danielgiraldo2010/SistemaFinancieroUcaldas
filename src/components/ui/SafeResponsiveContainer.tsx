@@ -7,41 +7,55 @@ type Props = React.ComponentProps<typeof RechartsResponsiveContainer> & { wrappe
 
 export default function SafeResponsiveContainer({ children, wrapperClassName, ...props }: Props) {
   const ref = React.useRef<HTMLDivElement | null>(null);
-  const [sizeReady, setSizeReady] = React.useState(false);
+  const [size, setSize] = React.useState({ width: 0, height: 0 });
 
   React.useEffect(() => {
-    if (!ref.current) return;
-    // If explicit numeric height provided, render immediately
-    const explicitHeight = typeof props.height === "number";
-    if (explicitHeight) {
-      setSizeReady(true);
-      return;
-    }
-
     const el = ref.current;
-    const check = () => {
+    if (!el) return;
+
+    const updateSize = () => {
       const rect = el.getBoundingClientRect();
-      if (rect.width > 0 && rect.height > 0) setSizeReady(true);
+      // Ensure width and height are positive; filter out invalid measurements from StrictMode double-renders
+      const width = Math.max(0, Math.floor(rect.width));
+      const height = Math.max(0, Math.floor(rect.height));
+
+      const nextSize = { width, height };
+
+      setSize((current) =>
+        current.width === nextSize.width && current.height === nextSize.height
+          ? current
+          : nextSize,
+      );
     };
 
-    // Initial check
-    check();
+    // Initial check with a small delay to allow layout to settle
+    const timeoutId = setTimeout(updateSize, 0);
 
-    // Observe changes
     let ro: ResizeObserver | null = null;
     if (typeof ResizeObserver !== "undefined") {
-      ro = new ResizeObserver(() => check());
+      ro = new ResizeObserver(updateSize);
       ro.observe(el);
     }
 
     return () => {
+      clearTimeout(timeoutId);
       if (ro) ro.disconnect();
     };
-  }, [props.height]);
+  }, []);
+
+  const canRender = size.width > 1 && size.height > 1;
 
   return (
-    <div ref={ref} style={{ width: "100%", height: "100%" }} className={wrapperClassName ?? "w-full min-w-0"}>
-      {sizeReady ? <RechartsResponsiveContainer {...props}>{children}</RechartsResponsiveContainer> : null}
+    <div
+      ref={ref}
+      style={{ width: "100%", height: "100%", minWidth: 0, minHeight: 0 }}
+      className={wrapperClassName ?? "w-full min-w-0 min-h-0"}
+    >
+      {canRender ? (
+        <RechartsResponsiveContainer width={size.width} height={size.height}>
+          {children}
+        </RechartsResponsiveContainer>
+      ) : null}
     </div>
   );
 }
